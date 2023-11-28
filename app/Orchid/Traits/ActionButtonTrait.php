@@ -5,6 +5,7 @@ namespace App\Orchid\Traits;
 use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\DropDown;
 
 trait ActionButtonTrait
 {
@@ -15,6 +16,14 @@ trait ActionButtonTrait
         return TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px');
+    }
+
+    public function actionButtonsDropdown()
+    {
+        return DropDown::make('Actions')
+                // ->icon('bs.three-dots-vertical');
+                // ->icon('bs.caret-down');
+                ->icon('bs.caret-down-fill');
     }
 
     public function editButton()

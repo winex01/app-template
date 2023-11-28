@@ -49,10 +49,8 @@ class RoleListLayout extends Table
 
             // Actions
             $this->actionButtons()
-                ->render(fn (Role $role) => DropDown::make()
-                    ->icon('bs.three-dots-vertical')
+                ->render(fn (Role $role) => $this->actionButtonsDropdown()
                     ->list([
-                                                
                         $this->editButton()
                             ->route('roles.edit', $role->id)
                             ->canSee($this->canEdit('roles')),
@@ -61,7 +59,6 @@ class RoleListLayout extends Table
                             ->confirm('After deleting, the role will be gone forever.')
                             ->method('delete', ['role' => $role->id])
                             ->canSee($this->canDelete('roles')),
-                            
                     ])
                 ), // end render
         ];
