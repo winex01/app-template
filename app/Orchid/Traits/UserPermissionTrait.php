@@ -2,7 +2,7 @@
 
 namespace App\Orchid\Traits;
 
-trait UserActionPermission
+trait UserPermissionTrait
 {
     public function canCreate($prefix)
     {

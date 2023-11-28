@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\Role;
 
+use App\Orchid\Traits\ExtendOrchidTrait;
 use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Input;
@@ -11,12 +12,11 @@ use Orchid\Platform\Models\Role;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
-use App\Orchid\Traits\UserActionPermission;
 use Orchid\Screen\Components\Cells\DateTimeSplit;
 
 class RoleListLayout extends Table
 {
-    use UserActionPermission;
+    use ExtendOrchidTrait;
     /**
      * @var string
      */
@@ -48,24 +48,19 @@ class RoleListLayout extends Table
                 ->sort(),
 
             // Actions
-            TD::make(__('Actions'))
-                ->align(TD::ALIGN_CENTER)
-                ->width('100px')
-                ->render(fn (Role $role) => DropDown::make()
-                    ->icon('bs.three-dots-vertical')
+            $this->actionButtons()
+                ->render(fn (Role $role) => $this->actionButtonsDropdown()
                     ->list([
-
-                        Link::make(__('Edit'))
+                        $this->editButton()
                             ->route('roles.edit', $role->id)
-                            ->icon('bs.pencil')
                             ->canSee($this->canEdit('roles')),
-                        
-                        Button::make(__('Delete'))
-                                ->icon('bs.trash3')
-                                ->confirm('After deleting, the role will be gone forever.')
-                                ->method('delete', ['role' => $role->id]),
-                        
-                    ])),
+                            
+                        $this->deleteButton()
+                            ->confirm('After deleting, the role will be gone forever.')
+                            ->method('delete', ['role' => $role->id])
+                            ->canSee($this->canDelete('roles')),
+                    ])
+                ), // end render
         ];
     }
 
