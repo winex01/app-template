@@ -63,26 +63,26 @@ Route::screen('users', UserListScreen::class)
         ->parent('platform.index')
         ->push(__('Users'), route('platform.systems.users')));
 
-// Platform > System > Roles > Role
+// Roles > Role
 Route::screen('roles/{role}/edit', RoleEditScreen::class)
-    ->name('platform.systems.roles.edit')
+    ->name('roles.edit')
     ->breadcrumbs(fn (Trail $trail, $role) => $trail
-        ->parent('platform.systems.roles')
-        ->push($role->name, route('platform.systems.roles.edit', $role)));
+        ->parent('roles.list')
+        ->push($role->name, route('roles.edit', $role)));
 
-// Platform > System > Roles > Create
+// Roles > Create
 Route::screen('roles/create', RoleEditScreen::class)
-    ->name('platform.systems.roles.create')
+    ->name('roles.create')
     ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.systems.roles')
-        ->push(__('Create'), route('platform.systems.roles.create')));
+        ->parent('roles.list')
+        ->push(__('Create'), route('roles.create')));
 
-// Platform > System > Roles
+// Roles
 Route::screen('roles', RoleListScreen::class)
-    ->name('platform.systems.roles')
+    ->name('roles.list')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Roles'), route('platform.systems.roles')));
+        ->push(__('Roles'), route('roles.list')));
 
 // Example...
 Route::screen('example', ExampleScreen::class)

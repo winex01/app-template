@@ -6,6 +6,7 @@ namespace App\Orchid\Screens\Role;
 
 use App\Orchid\Layouts\Role\RoleEditLayout;
 use App\Orchid\Layouts\Role\RolePermissionLayout;
+use App\Orchid\Traits\UserPermission;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Orchid\Platform\Models\Role;
@@ -17,6 +18,8 @@ use Orchid\Support\Facades\Toast;
 
 class RoleEditScreen extends Screen
 {
+    use UserPermission;
+    
     /**
      * @var Role
      */
@@ -55,7 +58,7 @@ class RoleEditScreen extends Screen
     public function permission(): ?iterable
     {
         return [
-            'platform.systems.roles',
+            'roles.create',
         ];
     }
 
@@ -69,12 +72,7 @@ class RoleEditScreen extends Screen
         return [
             Button::make(__('Save'))
                 ->icon('bs.check-circle')
-                ->method('save'),
-
-            Button::make(__('Remove'))
-                ->icon('bs.trash3')
-                ->method('remove')
-                ->canSee($this->role->exists),
+                ->method('save')
         ];
     }
 
@@ -123,20 +121,6 @@ class RoleEditScreen extends Screen
 
         Toast::info(__('Role was saved'));
 
-        return redirect()->route('platform.systems.roles');
-    }
-
-    /**
-     * @throws \Exception
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function remove(Role $role)
-    {
-        $role->delete();
-
-        Toast::info(__('Role was removed'));
-
-        return redirect()->route('platform.systems.roles');
+        return redirect()->route('roles.list');
     }
 }

@@ -47,8 +47,8 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(__('Roles'))
                 ->icon('bs.shield')
-                ->route('platform.systems.roles')
-                ->permission('platform.systems.roles')
+                ->route('roles.list')
+                ->permission('roles.list')
                 ->divider(),
 
 
@@ -103,8 +103,15 @@ class PlatformProvider extends OrchidServiceProvider
     {
         return [
             ItemPermission::group(__('System'))
-                ->addPermission('platform.systems.roles', __('Roles'))
+                // ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users')),
+
+            ItemPermission::group(__('Roles'))
+                ->addPermission('roles.list', __('List'))
+                ->addPermission('roles.create', __('Create'))
+                ->addPermission('roles.edit', __('Edit'))
+                ->addPermission('roles.delete', __('Delete'))
+            ,
         ];
     }
 }
