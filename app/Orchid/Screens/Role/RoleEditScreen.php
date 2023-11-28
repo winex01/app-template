@@ -119,7 +119,7 @@ class RoleEditScreen extends Screen
 
         $role->save();
 
-        Toast::info(__('Role was saved'));
+        Toast::success(__('Role was saved'));
 
         return redirect()->route('roles.list');
     }

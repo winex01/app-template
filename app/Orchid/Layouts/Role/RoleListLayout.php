@@ -58,10 +58,13 @@ class RoleListLayout extends Table
 
                         Link::make(__('Edit'))
                             ->route('roles.edit', $role->id)
-                            ->icon('bs.pencil'),
+                            ->icon('bs.pencil')
+                            ->canSee($this->canEdit('roles')),
                         
-                        // TODO:: delete action
-
+                        Button::make(__('Delete'))
+                                ->icon('bs.trash3')
+                                ->confirm('After deleting, the role will be gone forever.')
+                                ->method('delete', ['role' => $role->id]),
                         
                     ])),
         ];
