@@ -2,13 +2,8 @@
 
 namespace App\Orchid\Traits;
 
-trait UserPermission
+trait UserActionPermission
 {
-    public function canView($prefix)
-    {
-        return $prefix.'.list';
-    }
-
     public function canCreate($prefix)
     {
         return auth()->user()->hasAccess($prefix.'.create');
