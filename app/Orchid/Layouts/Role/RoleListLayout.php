@@ -48,26 +48,22 @@ class RoleListLayout extends Table
                 ->sort(),
 
             // Actions
-            // TODO:: add align width, and etc to trait so could avoid update anomally
-            TD::make(__('Actions'))
-                ->align(TD::ALIGN_CENTER)
-                ->width('100px')
+            $this->actionButtons()
                 ->render(fn (Role $role) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-
-                        Link::make(__('Edit'))
+                                                
+                        $this->editButton()
                             ->route('roles.edit', $role->id)
-                            ->icon('bs.pencil')
                             ->canSee($this->canEdit('roles')),
-                        
-                        Button::make(__('Delete'))
-                                ->icon('bs.trash3')
-                                ->confirm('After deleting, the role will be gone forever.')
-                                ->method('delete', ['role' => $role->id]),
-                                // TODO:: add canSee permission
-                        
-                    ])),
+                            
+                        $this->deleteButton()
+                            ->confirm('After deleting, the role will be gone forever.')
+                            ->method('delete', ['role' => $role->id])
+                            ->canSee($this->canDelete('roles')),
+                            
+                    ])
+                ), // end render
         ];
     }
 
