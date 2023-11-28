@@ -9,13 +9,12 @@ use Orchid\Screen\Screen;
 use Orchid\Screen\Actions\Link;
 use Orchid\Platform\Models\Role;
 use Orchid\Support\Facades\Toast;
-use Illuminate\Support\Facades\Auth;
-use App\Orchid\Traits\UserPermission;
 use App\Orchid\Layouts\Role\RoleListLayout;
+use App\Orchid\Traits\UserActionPermission;
 
 class RoleListScreen extends Screen
 {
-    use UserPermission;
+    use UserActionPermission;
     /**
      * Fetch data to be displayed on the screen.
      *
@@ -47,7 +46,7 @@ class RoleListScreen extends Screen
     public function permission(): ?iterable
     {
         return [
-            $this->canView('roles'),
+            'roles.list'
         ];
     }
 
@@ -87,4 +86,6 @@ class RoleListScreen extends Screen
 
     // TODO:: bulk delete
     // TODO:: soft delete and hard delete/destroy
+
+    
 }

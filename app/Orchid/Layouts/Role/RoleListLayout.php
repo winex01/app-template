@@ -10,14 +10,13 @@ use Orchid\Screen\Fields\Input;
 use Orchid\Platform\Models\Role;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Actions\Button;
-use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\DropDown;
-use App\Orchid\Traits\UserPermission;
+use App\Orchid\Traits\UserActionPermission;
 use Orchid\Screen\Components\Cells\DateTimeSplit;
 
 class RoleListLayout extends Table
 {
-    use UserPermission;
+    use UserActionPermission;
     /**
      * @var string
      */

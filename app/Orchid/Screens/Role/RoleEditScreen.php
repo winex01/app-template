@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens\Role;
 
-use App\Orchid\Layouts\Role\RoleEditLayout;
-use App\Orchid\Layouts\Role\RolePermissionLayout;
-use App\Orchid\Traits\UserPermission;
+use Orchid\Screen\Action;
+use Orchid\Screen\Screen;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Orchid\Platform\Models\Role;
-use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Screen;
-use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
+use Orchid\Support\Facades\Layout;
+use App\Orchid\Layouts\Role\RoleEditLayout;
+use App\Orchid\Traits\UserActionPermission;
+use App\Orchid\Layouts\Role\RolePermissionLayout;
 
 class RoleEditScreen extends Screen
 {
-    use UserPermission;
+    use UserActionPermission;
     
     /**
      * @var Role
@@ -44,7 +44,7 @@ class RoleEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Edit Role';
+        return __('Edit Role');
     }
 
     /**
@@ -56,9 +56,9 @@ class RoleEditScreen extends Screen
     }
 
     public function permission(): ?iterable
-    {
+    {   
         return [
-            'roles.create',
+            'roles.edit',
         ];
     }
 
