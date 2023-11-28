@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens\Role;
 
-use App\Orchid\Layouts\Role\RoleListLayout;
-use Orchid\Platform\Models\Role;
 use Orchid\Screen\Action;
-use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
+use Orchid\Screen\Actions\Link;
+use Orchid\Platform\Models\Role;
+use Orchid\Support\Facades\Toast;
+use Illuminate\Support\Facades\Auth;
+use App\Orchid\Traits\UserPermission;
+use App\Orchid\Layouts\Role\RoleListLayout;
 
 class RoleListScreen extends Screen
 {
+    use UserPermission;
     /**
      * Fetch data to be displayed on the screen.
      *
@@ -43,7 +47,7 @@ class RoleListScreen extends Screen
     public function permission(): ?iterable
     {
         return [
-            'platform.systems.roles',
+            $this->canView('roles'),
         ];
     }
 
@@ -57,7 +61,8 @@ class RoleListScreen extends Screen
         return [
             Link::make(__('Add'))
                 ->icon('bs.plus-circle')
-                ->href(route('platform.systems.roles.create')),
+                ->href(route('roles.create'))
+                ->canSee($this->canCreate('roles')),
         ];
     }
 
@@ -72,4 +77,14 @@ class RoleListScreen extends Screen
             RoleListLayout::class,
         ];
     }
+
+    public function delete(Role $role)
+    {
+        $role->delete();
+
+        Toast::success('You have successfully deleted the role.');
+    }
+
+    // TODO:: bulk delete
+    // TODO:: soft delete and hard delete/destroy
 }
