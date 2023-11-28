@@ -44,7 +44,7 @@ class RoleEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Edit Role';
+        return $this->role->exists ? __('Edit Role') : __('Create Role');
     }
 
     /**
@@ -52,13 +52,23 @@ class RoleEditScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Modify the privileges and permissions associated with a specific role.';
+        $text = 'the privileges and permissions associated with a specific role.';
+
+        if ($this->role->exists) {
+            $text = 'Modify '. $text;
+        }else {
+            $text = 'Create '. $text;
+        }
+
+        return $text;
     }
 
     public function permission(): ?iterable
-    {
+    {   
+        // TODO:: create or edit permission must be separate, can create CreateScreen and extend/inheriit this class
         return [
             'roles.create',
+            'roles.edit',
         ];
     }
 
