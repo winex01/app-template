@@ -44,7 +44,7 @@ class RoleEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->role->exists ? __('Edit Role') : __('Create Role');
+        return __('Edit Role');
     }
 
     /**
@@ -52,15 +52,7 @@ class RoleEditScreen extends Screen
      */
     public function description(): ?string
     {
-        $text = 'the privileges and permissions associated with a specific role.';
-
-        if ($this->role->exists) {
-            $text = 'Modify '. $text;
-        }else {
-            $text = 'Create '. $text;
-        }
-
-        return $text;
+        return 'Modify the privileges and permissions associated with a specific role.';
     }
 
     public function permission(): ?iterable
