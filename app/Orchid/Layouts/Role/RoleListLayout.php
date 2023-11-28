@@ -60,7 +60,8 @@ class RoleListLayout extends Table
                             ->method('delete', ['role' => $role->id])
                             ->canSee($this->canDelete('roles')),
                     ])
-                ), // end render
+                )
+                ->canSee($this->canAny('roles', ['edit', 'delete'])), 
         ];
     }
 
