@@ -13,12 +13,12 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Support\Facades\Toast;
 use Orchid\Support\Facades\Layout;
 use App\Orchid\Layouts\Role\RoleEditLayout;
-use App\Orchid\Traits\UserActionPermission;
 use App\Orchid\Layouts\Role\RolePermissionLayout;
+use App\Orchid\Traits\ExtendOrchidTrait;
 
 class RoleEditScreen extends Screen
 {
-    use UserActionPermission;
+    use ExtendOrchidTrait;
     
     /**
      * @var Role

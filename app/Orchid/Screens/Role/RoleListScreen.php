@@ -10,11 +10,11 @@ use Orchid\Screen\Actions\Link;
 use Orchid\Platform\Models\Role;
 use Orchid\Support\Facades\Toast;
 use App\Orchid\Layouts\Role\RoleListLayout;
-use App\Orchid\Traits\UserActionPermission;
+use App\Orchid\Traits\ExtendOrchidTrait;
 
 class RoleListScreen extends Screen
 {
-    use UserActionPermission;
+    use ExtendOrchidTrait;
     /**
      * Fetch data to be displayed on the screen.
      *

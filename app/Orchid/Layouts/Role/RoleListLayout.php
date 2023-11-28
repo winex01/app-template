@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\Role;
 
+use App\Orchid\Traits\ExtendOrchidTrait;
 use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Input;
@@ -11,12 +12,11 @@ use Orchid\Platform\Models\Role;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
-use App\Orchid\Traits\UserActionPermission;
 use Orchid\Screen\Components\Cells\DateTimeSplit;
 
 class RoleListLayout extends Table
 {
-    use UserActionPermission;
+    use ExtendOrchidTrait;
     /**
      * @var string
      */
@@ -48,6 +48,7 @@ class RoleListLayout extends Table
                 ->sort(),
 
             // Actions
+            // TODO:: add align width, and etc to trait so could avoid update anomally
             TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
@@ -64,6 +65,7 @@ class RoleListLayout extends Table
                                 ->icon('bs.trash3')
                                 ->confirm('After deleting, the role will be gone forever.')
                                 ->method('delete', ['role' => $role->id]),
+                                // TODO:: add canSee permission
                         
                     ])),
         ];
