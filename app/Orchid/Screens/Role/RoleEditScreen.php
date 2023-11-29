@@ -70,9 +70,7 @@ class RoleEditScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Button::make(__('Save'))
-                ->icon('bs.check-circle')
-                ->method('save')
+            $this->saveButton()
         ];
     }
 
@@ -94,7 +92,8 @@ class RoleEditScreen extends Screen
                 RolePermissionLayout::class,
             ])
                 ->title('Permission/Privilege')
-                ->description('A privilege is necessary to perform certain tasks and operations in an area.'),
+                ->description('A privilege is necessary to perform certain tasks and operations in an area.')
+                ->commands($this->saveButton())
         ];
     }
 

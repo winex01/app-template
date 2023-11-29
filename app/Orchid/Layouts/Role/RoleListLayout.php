@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\Role;
 
-use App\Orchid\Traits\ExtendOrchidTrait;
 use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Input;
 use Orchid\Platform\Models\Role;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Actions\DropDown;
+use App\Orchid\Traits\ExtendOrchidTrait;
 use Orchid\Screen\Components\Cells\DateTimeSplit;
 
 class RoleListLayout extends Table
@@ -28,11 +29,20 @@ class RoleListLayout extends Table
     public function columns(): array
     {
         return [
+            // TODO:: bulk delete, after this work, make reusable and add this to trait
+            TD::make()
+                ->align(TD::ALIGN_RIGHT)
+                ->width('1px')
+                ->render(fn(Role $role) => CheckBox::make('roles[]')
+                    ->value($role->id)
+                    ->checked(false)
+                ),
+
             TD::make('name', __('Name'))
                 ->sort()
                 ->cantHide()
                 ->filter(Input::make()),
-
+            
             TD::make('slug', __('Slug'))
                 ->sort()
                 ->cantHide()
