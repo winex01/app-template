@@ -1,22 +1,20 @@
 function attachBulkButtonListener() {
-    let toggleCheckboxesButtons = document.querySelectorAll('#bulkButton');
     let isChecked = false;
 
-    toggleCheckboxesButtons.forEach(button => {
-        button.addEventListener('click', event => {
-            event.preventDefault();
-            handleBulkButtonClick();
-        });
+    document.addEventListener('change', function(event) {
+        if (event.target.matches('#bulkButton')) {
+            handleBulkButtonClick(event.target.checked);
+        }
     });
 
-    function handleBulkButtonClick() {
+    function handleBulkButtonClick(checked) {
         let checkboxes = document.querySelectorAll('.form-check-input');
         
         checkboxes.forEach(checkbox => {
-            checkbox.checked = !isChecked; // Toggle checkbox state
+            checkbox.checked = checked;
         });
 
-        isChecked = !isChecked;
+        isChecked = checked;
 
         if (isChecked) {
             console.log(`All checkboxes checked.`);
@@ -27,9 +25,17 @@ function attachBulkButtonListener() {
 }
 
 document.addEventListener('turbo:load', () => {
+    // Append checkbox to the first column header
+    const firstHeader = document.querySelector('.table thead tr th:first-child');
+    const checkboxHTML = '<input class="form-check-input" type="checkbox" id="bulkButton">';
+    firstHeader.innerHTML = checkboxHTML + firstHeader.innerHTML; // Prepend checkbox
     attachBulkButtonListener();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Append checkbox to the first column header
+    const firstHeader = document.querySelector('.table thead tr th:first-child');
+    const checkboxHTML = '<input class="form-check-input" type="checkbox" id="bulkButton">';
+    firstHeader.innerHTML = checkboxHTML + firstHeader.innerHTML; // Prepend checkbox
     attachBulkButtonListener();
 });

@@ -31,7 +31,6 @@ class RoleListLayout extends Table
         return [
             // TODO:: bulk delete, after this work, make reusable and add this to trait
             TD::make()
-                ->align(TD::ALIGN_RIGHT)
                 ->width('1px')
                 ->render(fn(Role $role) => CheckBox::make('roles[]')
                     ->value($role->id)
