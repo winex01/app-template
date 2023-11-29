@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Link;
 use Orchid\Platform\Models\Role;
 use Orchid\Screen\Actions\Button;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Toast;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
@@ -94,9 +95,17 @@ class RoleListScreen extends Screen
     
     public function deleteBulk(Request $request)
     {
-        debug($request->all());
-        
-        Toast::success('Test successfully.');
+        if (!$request->roles) {
+
+            Alert::warning('Please check row(s) to be deleted.');
+
+        }else {
+
+            Role::whereIn('id', $request->roles)->delete();
+    
+            Toast::success('You have successfully deleted the selected roles.');
+        }
+
     }
 
     // TODO:: soft delete and hard delete/destroy
