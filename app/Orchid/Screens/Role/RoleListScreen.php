@@ -63,6 +63,7 @@ class RoleListScreen extends Screen
             // TODO:: bulk
             Link::make(__('Check All'))
                 ->id('bulkButton')
+                ->href('javascript:;')
                 ->icon('bs.check'),
 
             Button::make(__('Bulk Delete'))
