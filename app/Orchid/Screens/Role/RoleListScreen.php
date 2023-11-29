@@ -6,12 +6,13 @@ namespace App\Orchid\Screens\Role;
 
 use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
+use Illuminate\Http\Request;
+use Orchid\Screen\Actions\Link;
 use Orchid\Platform\Models\Role;
 use Orchid\Screen\Actions\Button;
 use Orchid\Support\Facades\Toast;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
-use Illuminate\Http\Request;
 
 class RoleListScreen extends Screen
 {
@@ -60,6 +61,10 @@ class RoleListScreen extends Screen
     {
         return [
             // TODO:: bulk
+            Link::make(__('Check All'))
+                ->id('bulkButton')
+                ->icon('bs.check'),
+
             Button::make(__('Bulk Delete'))
                 ->icon('bs.trash3')
                 ->confirm('After deleting, the roles will be gone forever.')
