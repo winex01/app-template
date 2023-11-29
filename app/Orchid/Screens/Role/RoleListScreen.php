@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Link;
 use Orchid\Platform\Models\Role;
 use Orchid\Screen\Actions\Button;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Toast;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
@@ -60,18 +61,10 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            // TODO:: bulk, put it on a trait
-            Link::make(__('Check All'))
-                ->id('bulkButton')
-                ->icon('bs.check'),
-
-            // TODO:: bulk delete, put it on a trait and try to create listener dont allow clicck or disable it if no checkbox is selected
-                        // or just add validation that to check checkbox first.
-            Button::make(__('Bulk Delete'))
-                ->icon('bs.trash3')
+            $this->bulkDeleteButton()
                 ->confirm('After deleting, the roles will be gone forever.')
-                // ->method('delete', ['role' => $role->id])
-                ->method('deleteBulk'),
+                ->method('deleteBulk')
+                ->canSee($this->canBulkDelete('roles')),
 
             
             $this->addButton()
@@ -101,9 +94,17 @@ class RoleListScreen extends Screen
     
     public function deleteBulk(Request $request)
     {
-        debug($request->all());
-        
-        Toast::success('Test successfully.');
+        if (!$request->roles) {
+
+            Alert::error('Please check row(s) to be deleted.');
+
+        }else {
+
+            Role::whereIn('id', $request->roles)->delete();
+    
+            Toast::success('You have successfully deleted the selected roles.');
+        }
+
     }
 
     // TODO:: soft delete and hard delete/destroy

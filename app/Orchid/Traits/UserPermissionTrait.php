@@ -20,6 +20,11 @@ trait UserPermissionTrait
         return auth()->user()->hasAccess($prefix.'.delete');
     }
 
+    public function canBulkDelete($prefix)
+    {
+        return auth()->user()->hasAccess($prefix.'.bulk.delete');
+    }
+
     public function canAny(string $prefix, array $permissions)
     {
         // append dot notation
