@@ -15,7 +15,8 @@ function attachBulkButtonListener() {
         });
 
         isChecked = checked;
-
+        
+        // check
         if (isChecked) {
             console.log(`All checkboxes checked.`);
         } else {
@@ -23,20 +24,25 @@ function attachBulkButtonListener() {
         }
     }
 }
+
 // preload
 document.addEventListener('turbo:load', () => {
-    // Append checkbox to the first column header
-    const firstHeader = document.querySelector('.table thead tr th:first-child');
-    const checkboxHTML = '<input class="form-check-input" type="checkbox" id="bulkButton">';
-    firstHeader.innerHTML = checkboxHTML + firstHeader.innerHTML; // Prepend checkbox
-    attachBulkButtonListener();
+    const tableRowsWithCheckboxes = document.querySelectorAll('.table tbody tr .form-check-input');
+    if (tableRowsWithCheckboxes.length > 0) {
+        const firstHeader = document.querySelector('.table thead tr th:first-child');
+        const checkboxHTML = '<input class="form-check-input" type="checkbox" id="bulkButton">';
+        firstHeader.innerHTML = checkboxHTML + firstHeader.innerHTML; // Prepend checkbox
+        attachBulkButtonListener();
+    }
 });
 
-// if he tries to refresh the browser
+// if user tries to refresh the browser
 document.addEventListener('DOMContentLoaded', () => {
-    // Append checkbox to the first column header
-    const firstHeader = document.querySelector('.table thead tr th:first-child');
-    const checkboxHTML = '<input class="form-check-input" type="checkbox" id="bulkButton">';
-    firstHeader.innerHTML = checkboxHTML + firstHeader.innerHTML; // Prepend checkbox
-    attachBulkButtonListener();
+    const tableRowsWithCheckboxes = document.querySelectorAll('.table tbody tr .form-check-input');
+    if (tableRowsWithCheckboxes.length > 0) {
+        const firstHeader = document.querySelector('.table thead tr th:first-child');
+        const checkboxHTML = '<input class="form-check-input" type="checkbox" id="bulkButton">';
+        firstHeader.innerHTML = checkboxHTML + firstHeader.innerHTML; // Prepend checkbox
+        attachBulkButtonListener();
+    }
 });
