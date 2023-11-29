@@ -23,7 +23,7 @@ function attachBulkButtonListener() {
         }
     }
 }
-
+// preload
 document.addEventListener('turbo:load', () => {
     // Append checkbox to the first column header
     const firstHeader = document.querySelector('.table thead tr th:first-child');
@@ -32,6 +32,7 @@ document.addEventListener('turbo:load', () => {
     attachBulkButtonListener();
 });
 
+// if he tries to refresh the browser
 document.addEventListener('DOMContentLoaded', () => {
     // Append checkbox to the first column header
     const firstHeader = document.querySelector('.table thead tr th:first-child');
