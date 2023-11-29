@@ -111,6 +111,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('roles.create', __('Roles Create'))
                 ->addPermission('roles.edit', __('Roles Edit'))
                 ->addPermission('roles.delete', __('Roles Delete'))
+                // TODO:: create delete bulk
             ,
         ];
     }
