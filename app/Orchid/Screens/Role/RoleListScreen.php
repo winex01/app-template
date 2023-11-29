@@ -60,12 +60,13 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            // TODO:: bulk
+            // TODO:: bulk, put it on a trait
             Link::make(__('Check All'))
                 ->id('bulkButton')
-                ->href('javascript:;')
                 ->icon('bs.check'),
 
+            // TODO:: bulk delete, put it on a trait and try to create listener dont allow clicck or disable it if no checkbox is selected
+                        // or just add validation that to check checkbox first.
             Button::make(__('Bulk Delete'))
                 ->icon('bs.trash3')
                 ->confirm('After deleting, the roles will be gone forever.')
