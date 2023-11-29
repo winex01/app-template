@@ -107,11 +107,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('platform.systems.users', __('Users')),
 
             ItemPermission::group(__('Roles'))
-                ->addPermission('roles.list', __('Roles List'))
-                ->addPermission('roles.create', __('Roles Create'))
-                ->addPermission('roles.edit', __('Roles Edit'))
-                ->addPermission('roles.delete', __('Roles Delete'))
-                // TODO:: create delete bulk
+                ->addPermission('roles.list', __('1. List'))
+                ->addPermission('roles.create', __('2. Create'))
+                ->addPermission('roles.edit', __('3. Edit'))
+                ->addPermission('roles.delete', __('4. Delete'))
+                ->addPermission('roles.bulk.delete', __('5. Bulk Delete'))
             ,
         ];
     }

@@ -29,6 +29,13 @@ trait ActionButtonTrait
                 ->icon('bs.plus-circle');
     }
 
+    public function saveButton()
+    {
+        return Button::make(__('Save'))
+                ->icon('bs.check-circle')
+                ->method('save');
+    }
+
     public function editButton()
     {
         return Link::make(__('Edit'))
@@ -41,10 +48,11 @@ trait ActionButtonTrait
                 ->icon('bs.trash3');
     }
 
-    public function saveButton()
+    public function bulkDeleteButton()
     {
-        return Button::make(__('Save'))
-                ->icon('bs.check-circle')
-                ->method('save');
+        return Button::make(__('Bulk Delete'))
+                ->icon('bs.trash3');
     }
+
+    
 }

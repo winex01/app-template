@@ -61,11 +61,10 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            // TODO:: bulk delete trait
-            Button::make(__('Bulk Delete'))
-                ->icon('bs.trash3')
+            $this->bulkDeleteButton()
                 ->confirm('After deleting, the roles will be gone forever.')
-                ->method('deleteBulk'),
+                ->method('deleteBulk')
+                ->canSee($this->canBulkDelete('roles')),
 
             
             $this->addButton()
@@ -97,7 +96,7 @@ class RoleListScreen extends Screen
     {
         if (!$request->roles) {
 
-            Alert::warning('Please check row(s) to be deleted.');
+            Alert::error('Please check row(s) to be deleted.');
 
         }else {
 
