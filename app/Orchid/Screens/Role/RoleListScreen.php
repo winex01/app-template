@@ -58,10 +58,9 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Add'))
-                ->icon('bs.plus-circle')
+            $this->addButton()
                 ->href(route('roles.create'))
-                ->canSee($this->canCreate('roles')),
+                ->canSee($this->canCreate('roles'))
         ];
     }
 

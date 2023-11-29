@@ -12,7 +12,6 @@ trait ActionButtonTrait
     //
     public function actionButtons()
     {   
-        // can be chain and use orchid methods
         return TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px');
@@ -21,20 +20,31 @@ trait ActionButtonTrait
     public function actionButtonsDropdown()
     {
         return DropDown::make('Actions')
-                // ->icon('bs.three-dots-vertical');
-                // ->icon('bs.caret-down');
                 ->icon('bs.caret-down-fill');
+    }
+
+    public function addButton()
+    {
+        return Link::make(__('Add'))
+                ->icon('bs.plus-circle');
     }
 
     public function editButton()
     {
         return Link::make(__('Edit'))
-                    ->icon('bs.pencil');
+                ->icon('bs.pencil');
     }
 
     public function deleteButton()
     {
         return Button::make(__('Delete'))
                 ->icon('bs.trash3');
+    }
+
+    public function saveButton()
+    {
+        return Button::make(__('Save'))
+                ->icon('bs.check-circle')
+                ->method('save');
     }
 }
