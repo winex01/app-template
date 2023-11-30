@@ -47,6 +47,7 @@ class RoleListLayout extends Table
                 ->sort(),
 
             // Actions
+            // TODO:: refactor this
             $this->actionButtons()
                 ->render(fn (Role $role) => $this->actionButtonsDropdown()
                     ->list([
@@ -56,7 +57,10 @@ class RoleListLayout extends Table
                             
                         $this->deleteButton()
                             ->confirm('After deleting, the role will be gone forever.')
-                            ->method('delete', ['role' => $role->id])
+                            ->method('delete', [
+                                'model' => 'Role',
+                                'id' => $role->id,
+                            ])
                             ->canSee($this->canDelete('roles')),
                     ])
                 )

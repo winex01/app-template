@@ -5,11 +5,16 @@ namespace App\Orchid\Traits;
 use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\Button;
+use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\DropDown;
 
 trait ActionButtonTrait
 {
-    //
+    /*
+    |--------------------------------------------------------------------------
+    | Actions Buttons
+    |--------------------------------------------------------------------------
+    */
     public function actionButtons()
     {   
         return TD::make(__('Actions'))
@@ -23,10 +28,17 @@ trait ActionButtonTrait
                 ->icon('bs.caret-down-fill');
     }
 
-    public function addButton()
+    /*
+    |--------------------------------------------------------------------------
+    | Create
+    |--------------------------------------------------------------------------
+    */
+    public function addButton($prefix)
     {
         return Link::make(__('Add'))
-                ->icon('bs.plus-circle');
+                ->icon('bs.plus-circle')
+                ->href(route($prefix.'.create'))
+                ->canSee($this->canCreate($prefix));
     }
 
     public function saveButton()
@@ -36,11 +48,22 @@ trait ActionButtonTrait
                 ->method('save');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Edit
+    |--------------------------------------------------------------------------
+    */
     public function editButton()
     {
         return Link::make(__('Edit'))
                 ->icon('bs.pencil');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Delete
+    |--------------------------------------------------------------------------
+    */
 
     public function deleteButton()
     {
@@ -48,11 +71,35 @@ trait ActionButtonTrait
                 ->icon('bs.trash3');
     }
 
-    public function bulkDeleteButton()
+    public function delete($model, $id)
     {
-        return Button::make(__('Bulk Delete'))
-                ->icon('bs.trash3');
+        $fullPathModel = 'App\Models\\' . $model;
+
+        if ($fullPathModel::destroy($id)) {
+
+            Toast::success('You have successfully deleted the '.$model.'.');
+            
+        }else {
+            
+            Toast::error('Something went wrong, please contact administrator.');
+
+        }
     }
 
-    
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bulk Delete
+    |--------------------------------------------------------------------------
+    */
+    public function bulkDeleteButton($prefix)
+    {
+        return Button::make(__('Bulk Delete'))
+                ->icon('bs.trash3')
+                ->confirm('After deleting, the '.$prefix.' will be gone forever.')
+                ->method('deleteBulk')
+                ->canSee($this->canBulkDelete($prefix));
+    }
+
+    // TODO:: try to refactor and don't use model bindig if its gonna work    
 }
