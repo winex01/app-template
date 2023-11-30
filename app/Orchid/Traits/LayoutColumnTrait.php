@@ -8,14 +8,14 @@ use Orchid\Screen\Fields\CheckBox;
 trait LayoutColumnTrait
 {
     //
-    public function columnBulkAction($prefix)
+    public function columnBulkAction($screen)
     {
-        $temp = $prefix.'[]';
+        $temp = $screen.'[]';
         return TD::make()
                 ->width('1px')
-                ->render(fn($prefix) => CheckBox::make($temp)
-                    ->value($prefix->id)
+                ->render(fn($screen) => CheckBox::make($temp)
+                    ->value($screen->id)
                     ->checked(false)
-                )->canSee($this->canBulkDelete($prefix));
+                )->canSee($this->canBulkDelete($screen));
     }
 }

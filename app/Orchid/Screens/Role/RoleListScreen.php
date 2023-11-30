@@ -76,23 +76,6 @@ class RoleListScreen extends Screen
             RoleListLayout::class,
         ];
     }
-    
-    // TODO:: put this on trait.
-    public function deleteBulk(Request $request)
-    {
-        if (!$request->roles) {
-
-            Alert::error('Please select the row(s) to be deleted by checking the checkbox.');
-
-        }else {
-
-            Role::whereIn('id', $request->roles)->delete();
-    
-            Toast::success('You have successfully deleted the selected roles.');
-        }
-
-    }
 
     // TODO:: soft delete and hard delete/destroy
-    
 }
