@@ -7,6 +7,8 @@ namespace App\Orchid\Screens\Role;
 use App\Models\Role;
 use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
+use Orchid\Screen\Actions\Link;
+use Orchid\Screen\Actions\DropDown;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
 
@@ -21,7 +23,7 @@ class RoleListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'roles' => Role::filters()->defaultSort('id', 'desc')->paginate(),
+            'roles' => Role::filters()->defaultSort('id', 'desc')->paginate(10),
         ];
     }
 
@@ -57,6 +59,18 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
+
+            // TODO:: Record per page.
+            DropDown::make('Entries')
+            ->icon('bs.list')
+            ->list([
+                Link::make(__('10')),
+                Link::make(__('25')),
+                Link::make(__('50')),
+                Link::make(__('100')),
+                Link::make(__('All')),
+            ]),
+
             $this->bulkDeleteButton('roles'),
             $this->addButton('roles'),
         ];
