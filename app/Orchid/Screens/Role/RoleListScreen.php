@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens\Role;
 
+use App\Models\Role;
 use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
-use Illuminate\Http\Request;
-use Orchid\Screen\Actions\Link;
-use Orchid\Platform\Models\Role;
-use Orchid\Screen\Actions\Button;
-use Orchid\Support\Facades\Alert;
-use Orchid\Support\Facades\Toast;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
 
@@ -48,6 +43,7 @@ class RoleListScreen extends Screen
 
     public function permission(): ?iterable
     {
+        // TODO::
         return [
             'roles.list'
         ];
@@ -61,15 +57,8 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            $this->bulkDeleteButton()
-                ->confirm('After deleting, the roles will be gone forever.')
-                ->method('deleteBulk')
-                ->canSee($this->canBulkDelete('roles')),
-
-            
-            $this->addButton()
-                ->href(route('roles.create'))
-                ->canSee($this->canCreate('roles')),
+            $this->bulkDeleteButton('roles'),
+            $this->addButton('roles'),
         ];
     }
 
@@ -85,28 +74,5 @@ class RoleListScreen extends Screen
         ];
     }
 
-    public function delete(Role $role)
-    {
-        $role->delete();
-
-        Toast::success('You have successfully deleted the role.');
-    }
-    
-    public function deleteBulk(Request $request)
-    {
-        if (!$request->roles) {
-
-            Alert::error('Please check row(s) to be deleted.');
-
-        }else {
-
-            Role::whereIn('id', $request->roles)->delete();
-    
-            Toast::success('You have successfully deleted the selected roles.');
-        }
-
-    }
-
     // TODO:: soft delete and hard delete/destroy
-    
 }

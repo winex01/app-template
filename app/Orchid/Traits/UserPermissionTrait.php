@@ -5,34 +5,34 @@ namespace App\Orchid\Traits;
 trait UserPermissionTrait
 {
 
-    public function canCreate($prefix)
+    public function canCreate($screen)
     {
-        return auth()->user()->hasAccess($prefix.'.create');
+        return auth()->user()->hasAccess($screen.'.create');
     }
 
-    public function canEdit($prefix)
+    public function canEdit($screen)
     {
-        return auth()->user()->hasAccess($prefix.'.edit');
+        return auth()->user()->hasAccess($screen.'.edit');
     }
 
-    public function canDelete($prefix)
+    public function canDelete($screen)
     {
-        return auth()->user()->hasAccess($prefix.'.delete');
+        return auth()->user()->hasAccess($screen.'.delete');
     }
 
-    public function canBulkDelete($prefix)
+    public function canBulkDelete($screen)
     {
-        return auth()->user()->hasAccess($prefix.'.bulk.delete');
+        return auth()->user()->hasAccess($screen.'.bulk.delete');
     }
 
-    public function canAny(string $prefix, array $permissions)
+    public function canAny(string $screen, array $permissions)
     {
         // append dot notation
-        $prefix = $prefix.'.';
+        $screen = $screen.'.';
 
         // Append roles to each item in the array
-        $actionsWithRoles = array_map(function ($action) use ($prefix) {
-            return $prefix . $action;
+        $actionsWithRoles = array_map(function ($action) use ($screen) {
+            return $screen . $action;
         }, $permissions);
 
 
