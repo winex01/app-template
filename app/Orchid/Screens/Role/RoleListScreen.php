@@ -82,7 +82,7 @@ class RoleListScreen extends Screen
     {
         if (!$request->roles) {
 
-            Alert::error('Please check row(s) to be deleted.');
+            Alert::error('Please select the row(s) to be deleted by checking the checkbox.');
 
         }else {
 

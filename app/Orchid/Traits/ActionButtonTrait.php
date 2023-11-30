@@ -3,6 +3,7 @@
 namespace App\Orchid\Traits;
 
 use Orchid\Screen\TD;
+use Illuminate\Support\Str;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\Button;
 use Orchid\Support\Facades\Toast;
@@ -53,10 +54,12 @@ trait ActionButtonTrait
     | Edit
     |--------------------------------------------------------------------------
     */
-    public function editButton()
+    public function editButton($prefix, $id)
     {
         return Link::make(__('Edit'))
-                ->icon('bs.pencil');
+                ->icon('bs.pencil')
+                ->route($prefix.'.edit', $id)
+                ->canSee($this->canEdit($prefix));
     }
 
     /*
@@ -65,19 +68,27 @@ trait ActionButtonTrait
     |--------------------------------------------------------------------------
     */
 
-    public function deleteButton()
+    public function deleteButton($prefix, $id)
     {
+        $model = ucfirst(Str::singular($prefix));
+
         return Button::make(__('Delete'))
-                ->icon('bs.trash3');
+                ->icon('bs.trash3')
+                ->confirm('After deleting, the '.Str::singular($prefix).' will be gone forever.')
+                ->method('delete', [
+                    'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
+                    'id' => $id,
+                ])
+                ->canSee($this->canDelete($prefix));
     }
 
     public function delete($model, $id)
     {
-        $fullPathModel = 'App\Models\\' . $model;
+        if ($model::destroy($id)) {
 
-        if ($fullPathModel::destroy($id)) {
+            $label = str_replace('App\Models\\', '', $model);
 
-            Toast::success('You have successfully deleted the '.$model.'.');
+            Toast::success('You have successfully deleted the '.$label.'.');
             
         }else {
             
@@ -101,5 +112,4 @@ trait ActionButtonTrait
                 ->canSee($this->canBulkDelete($prefix));
     }
 
-    // TODO:: try to refactor and don't use model bindig if its gonna work    
 }
