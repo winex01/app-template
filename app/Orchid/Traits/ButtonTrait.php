@@ -11,7 +11,7 @@ use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\DropDown;
 
-trait ActionButtonTrait
+trait ButtonTrait
 {
     /*
     |--------------------------------------------------------------------------
