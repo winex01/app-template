@@ -10,9 +10,15 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\DropDown;
+use Illuminate\Support\Facades\Cookie;
 
 trait ButtonTrait
-{
+{   
+    // Table Entries/Record per page value
+    public $recordPerPage; 
+
+    // Entries/Record options, ex: 10, 25, 50 etc..
+    public $recordPerPageOptions = [10, 25, 50, 75, 100];
     /*
     |--------------------------------------------------------------------------
     | Actions Buttons
@@ -29,6 +35,58 @@ trait ButtonTrait
     {
         return DropDown::make('Actions')
                 ->icon('bs.caret-down-fill');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pagination Entries
+    |--------------------------------------------------------------------------
+    */
+    
+
+    public function entriesPerPageButton(array $recordPerPageOptions = [5, 10, 25, 50, 75, 100])
+    {
+        $options = [];
+        foreach ($recordPerPageOptions as $value) {
+            $label = $this->recordPerPage == $value ? __($value) . ' - Active' : __($value);
+
+            $options[] = Button::make($label)->method('setEntriesPerPage', ['limit' => $value]);
+        }
+
+        // append 'All' option
+        $value = 999999;
+        $optionAll = [
+            'label' => $this->recordPerPage == $value ? __('All') . ' - Active' : __('All'),
+            'value' => $value
+        ];
+
+        $options[] = Button::make($optionAll['label'])
+                        ->confirm('Are you sure you want to do this? It may take a while, depending on the size of the records.')
+                        ->method('setEntriesPerPage', ['limit' => $optionAll['value']]);
+
+        return DropDown::make('Entries')
+                ->icon('bs.list')
+                ->list($options);
+    }
+
+    public function getEntriesPerPage(int $defaultLimit = 10)
+    {
+        $this->recordPerPage = $defaultLimit;
+
+        if ( Cookie::has('recordPerPage') ) {
+
+            $this->recordPerPage = request()->cookie('recordPerPage'); 
+        
+        }
+
+        return $this->recordPerPage;
+    }
+    
+    public function setEntriesPerPage(int $limit)
+    {
+        Cookie::queue('recordPerPage', $limit, 525600); // 1 year in minutes
+
+        $this->recordPerPage = $limit;
     }
 
     /*
