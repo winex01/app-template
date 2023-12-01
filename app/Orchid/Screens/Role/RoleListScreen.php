@@ -13,6 +13,7 @@ use App\Orchid\Layouts\Role\RoleListLayout;
 class RoleListScreen extends Screen
 {
     use ExtendOrchidTrait;
+
     /**
      * Fetch data to be displayed on the screen.
      *
@@ -21,7 +22,7 @@ class RoleListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'roles' => Role::filters()->defaultSort('id', 'desc')->paginate(),
+            'roles' => Role::filters()->defaultSort('id', 'desc')->paginate($this->getEntriesPerPage()),
         ];
     }
 
@@ -57,6 +58,7 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
+            $this->entriesPerPageButton(),
             $this->bulkDeleteButton('roles'),
             $this->addButton('roles'),
         ];
