@@ -44,7 +44,6 @@ class RoleListScreen extends Screen
 
     public function permission(): ?iterable
     {
-        // TODO::
         return [
             'roles.list'
         ];
