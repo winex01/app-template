@@ -22,7 +22,7 @@ class RoleListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'roles' => Role::filters()->defaultSort('id', 'desc')->paginate($this->getEntriesPerPage()),
+            'roles' => Role::filters()->defaultSort('name', 'asc')->paginate($this->getEntriesPerPage()),
         ];
     }
 
