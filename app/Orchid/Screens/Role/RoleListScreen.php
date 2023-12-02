@@ -9,6 +9,7 @@ use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
+use App\Orchid\Layouts\Role\RoleFiltersLayout;
 
 class RoleListScreen extends Screen
 {
@@ -22,7 +23,9 @@ class RoleListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'roles' => Role::filters()->defaultSort('name', 'asc')->paginate($this->getEntriesPerPage()),
+            'roles' => Role::filters(RoleFiltersLayout::class)
+                            ->defaultSort('name', 'asc')
+                            ->paginate($this->getEntriesPerPage()),
         ];
     }
 
@@ -71,9 +74,9 @@ class RoleListScreen extends Screen
     public function layout(): iterable
     {
         return [
+            // TODO:: When Trash filter is active, in action dropdown instead of edit/delete, show restore/destroy
+            RoleFiltersLayout::class,
             RoleListLayout::class,
         ];
     }
-
-    // TODO:: soft delete and hard delete/destroy
 }
