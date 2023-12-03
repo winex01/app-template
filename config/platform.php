@@ -304,7 +304,7 @@ return [
     |
     */
 
-    'prevents_abandonment' => true,
+    'prevents_abandonment' => false,
 
     /*
      |--------------------------------------------------------------------------
