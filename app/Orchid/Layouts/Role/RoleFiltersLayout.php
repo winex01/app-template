@@ -16,7 +16,7 @@ class RoleFiltersLayout extends Selection
     {
         return [
             TrashFilter::class,
-            RoleFilter::class,
+            RoleFilter::class, // TODO:: remove this, this is only for debugging/checkign view
         ];
     }
 }
