@@ -89,6 +89,8 @@ trait ButtonTrait
                     $this->modelObjectSoftDeleted($tableName ?? $screen, $id) // show only if softDeleted
                 );
     }
+
+    // TODO:: TBD bulk destroy button, and if filter is active hide the normal bulk Delete,
     
     public function destroy($model, $id)
     {
@@ -254,7 +256,6 @@ trait ButtonTrait
                 ->canSee($this->canBulkDelete($screen));
     }
 
-    // TODO:: TBD if we will show this bulk delete or not if the trash filter is active
     public function deleteBulk($model, $screen, Request $request)
     {
         if (!$request->$screen) {
@@ -262,7 +263,6 @@ trait ButtonTrait
             Alert::error('Please select the row(s) to be deleted by checking the checkbox.');
 
         }else {
-
             $model::whereIn('id', $request->$screen)->delete();
     
             $label = str_replace('App\Models\\', '', $screen);

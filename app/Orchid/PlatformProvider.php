@@ -120,5 +120,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('roles.destroy', __('6. Destroy'))
             ,
         ];
+
+        // TODO:: trash only filter permission
     }
 }
