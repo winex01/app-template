@@ -11,9 +11,12 @@ use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\DropDown;
 use Illuminate\Support\Facades\Cookie;
+use App\Orchid\Traits\ModelObjectTrait;
 
 trait ButtonTrait
 {   
+    use ModelObjectTrait;
+
     // Table Entries/Record per page value
     public $recordPerPage; 
 
@@ -24,17 +27,38 @@ trait ButtonTrait
     | Actions Buttons
     |--------------------------------------------------------------------------
     */
-    public function actionButtons()
-    {   
+
+    /**
+     * NOTE:: if you want to create new button(method) please add 'Button' text suffix.
+     * example: editButton, deleteButton, restoreButton etc.
+     * check example: editButton, deleteButton method.
+     */
+    public function actions($screen, $buttons = [])
+    {
         return TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
-                ->width('100px');
-    }
+                ->width('100px')
+                ->render(function ($item) use ($screen, $buttons) {
 
-    public function actionButtonsDropdown()
-    {
-        return DropDown::make('Actions')
-                ->icon('bs.caret-down-fill');
+                    $list = [];
+                    foreach ($buttons as $button) {
+
+                        $list[] = $this->{$button}($screen, $item->id); 
+
+                    }
+
+                    return  DropDown::make('Actions')
+                                ->icon('bs.caret-down-fill')
+                                ->list($list);
+                })->canSee(
+                    $this->canAny(
+                        $screen, 
+                        // permissionSuffix ex: edit, delete, etc..
+                        array_map(function ($button) {
+                            return str_replace('Button', '', $button);
+                        }, $buttons)
+                    )
+                );
     }
 
     /*
@@ -114,21 +138,24 @@ trait ButtonTrait
     | Edit
     |--------------------------------------------------------------------------
     */
-    public function editButton($screen, $id)
+    public function editButton($screen, $id, $tableName = null)
     {
         return Link::make(__('Edit'))
                 ->icon('bs.pencil')
                 ->route($screen.'.edit', $id)
-                ->canSee($this->canEdit($screen));
-    }
-
+                ->canSee(
+                    $this->canEdit($screen) && 
+                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id) // show button if item is not soft deleted
+                );
+    }    
+    
     /*
     |--------------------------------------------------------------------------
     | Delete
     |--------------------------------------------------------------------------
     */
 
-    public function deleteButton($screen, $id)
+    public function deleteButton($screen, $id, $tableName = null)
     {
         $model = ucfirst(Str::singular($screen));
 
@@ -139,7 +166,10 @@ trait ButtonTrait
                     'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
                     'id' => $id,
                 ])
-                ->canSee($this->canDelete($screen));
+                ->canSee(
+                    $this->canDelete($screen) &&
+                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id)
+                );
     }
 
     public function delete($model, $id)

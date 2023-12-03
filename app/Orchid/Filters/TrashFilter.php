@@ -51,8 +51,7 @@ class TrashFilter extends Filter
         return [
             CheckBox::make('trash_only')
                 ->title('Trashed Only')
-                ->help('Show Deleted Items.')
-                ->type('hidden')
+                ->placeholder('Show Deleted Items.')
                 ->sendTrueOrFalse()
         ];
     }

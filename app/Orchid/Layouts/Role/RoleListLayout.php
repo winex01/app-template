@@ -6,7 +6,6 @@ namespace App\Orchid\Layouts\Role;
 
 use Orchid\Screen\TD;
 use Orchid\Screen\Fields\Input;
-use Orchid\Platform\Models\Role;
 use Orchid\Screen\Layouts\Table;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use Orchid\Screen\Components\Cells\DateTimeSplit;
@@ -47,16 +46,11 @@ class RoleListLayout extends Table
                 ->sort(),
 
             // Actions
-            $this->actionButtons()
-                ->render(fn (Role $role) => $this->actionButtonsDropdown()
-                    ->list([
-                        $this->editButton('roles', $role->id),
-                        $this->deleteButton('roles', $role->id),
-                    ])
-            )->canSee($this->canAny('roles', ['edit', 'delete'])), 
+            $this->actions('roles', [
+                'editButton',
+                'deleteButton',
+            ]), 
         ];
     }
-
-
     
 }
