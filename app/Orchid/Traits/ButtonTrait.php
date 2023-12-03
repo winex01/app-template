@@ -79,7 +79,7 @@ trait ButtonTrait
         return Button::make(__('Destroy'))
                 ->icon('bs.trash3')
                 ->class('btn btn-sm btn-danger')
-                ->confirm('Are you sure you want to permanently delete this '.Str::singular($screen).'  forever.')
+                ->confirm('Are you sure you want to remove this '.Str::singular($screen).' in the database.')
                 ->method('destroy', [
                     'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
                     'id' => $id,
