@@ -47,6 +47,8 @@ trait ButtonTrait
 
                     }
 
+                    // TODO:: if item is soft deleted, then show Restore/Destroy button 
+
                     return  DropDown::make('Actions')
                                 ->icon('bs.caret-down-fill')
                                 ->list($list);
@@ -66,8 +68,6 @@ trait ButtonTrait
     | Pagination Entries
     |--------------------------------------------------------------------------
     */
-    
-
     public function entriesPerPageButton(array $recordPerPageOptions = [5, 10, 25, 50, 75, 100])
     {
         $options = [];
