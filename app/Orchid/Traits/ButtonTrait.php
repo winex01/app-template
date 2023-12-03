@@ -25,17 +25,38 @@ trait ButtonTrait
     | Actions Buttons
     |--------------------------------------------------------------------------
     */
-    public function actionButtons()
-    {   
+
+    /**
+     * NOTE:: if you want to create new button(method) please add 'Button' text suffix.
+     * example: editButton, deleteButton, restoreButton etc.
+     * check: editButton, deleteButton method.
+     */
+    public function actions($screen, $buttons = [])
+    {
         return TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
-                ->width('100px');
-    }
+                ->width('100px')
+                ->render(function ($item) use ($screen, $buttons) {
 
-    public function actionButtonsDropdown()
-    {
-        return DropDown::make('Actions')
-                ->icon('bs.caret-down-fill');
+                    $list = [];
+                    foreach ($buttons as $button) {
+
+                        $list[] = $this->{$button}($screen, $item->id); 
+
+                    }
+
+                    return  DropDown::make('Actions')
+                                ->icon('bs.caret-down-fill')
+                                ->list($list);
+                })->canSee(
+                    $this->canAny(
+                        $screen, 
+                        // permissionSuffix ex: edit, delete, etc..
+                        array_map(function ($button) {
+                            return str_replace('Button', '', $button);
+                        }, $buttons)
+                    )
+                );
     }
 
     /*
@@ -117,16 +138,23 @@ trait ButtonTrait
     */
     public function editButton($screen, $id, $tableName = null)
     {
-        // begin transfer to another function
-        if ($tableName == null) {
-            $tableName = $screen;
-        }
-
+        return Link::make(__('Edit'))
+                ->icon('bs.pencil')
+                ->route($screen.'.edit', $id)
+                ->canSee(
+                    $this->canEdit($screen) && 
+                    $this->itemExist($tableName ?? $screen, $id) // if item is already deleted then dont show edit button
+                );
+    }
+    
+    // TODO:: transfer location later.
+    public function itemExist($tableName, $id)
+    {
         $showButton = true;
 
         // check if role screen table has deleted_at table
         if (Schema::hasColumn($tableName, 'deleted_at')) {
-            $model = 'App\Models\\'.ucfirst(Str::singular($screen));
+            $model = 'App\Models\\'.ucfirst(Str::singular($tableName));
 
             // check role, if item is already deleted then dont show the edit button
             $item = $model::withTrashed()->find($id);
@@ -138,12 +166,7 @@ trait ButtonTrait
 
         }
 
-        // end transfer to another fucntion
-
-        return Link::make(__('Edit'))
-                ->icon('bs.pencil')
-                ->route($screen.'.edit', $id)
-                ->canSee($this->canEdit($screen) && $showButton);
+        return $showButton;
     }
     
     /*
@@ -152,7 +175,7 @@ trait ButtonTrait
     |--------------------------------------------------------------------------
     */
 
-    public function deleteButton($screen, $id)
+    public function deleteButton($screen, $id, $tableName = null)
     {
         $model = ucfirst(Str::singular($screen));
 
@@ -163,7 +186,10 @@ trait ButtonTrait
                     'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
                     'id' => $id,
                 ])
-                ->canSee($this->canDelete($screen));
+                ->canSee(
+                    $this->canDelete($screen) &&
+                    $this->itemExist($tableName ?? $screen, $id)
+                );
     }
 
     public function delete($model, $id)

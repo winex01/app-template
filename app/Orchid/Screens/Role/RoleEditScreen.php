@@ -55,7 +55,7 @@ class RoleEditScreen extends Screen
     }
 
     public function permission(): ?iterable
-    {   
+    {   // TODO:: dont allow to view screen if item is already deleted_at
         return [
             'roles.edit',
         ];
