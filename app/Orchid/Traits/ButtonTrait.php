@@ -11,6 +11,7 @@ use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\DropDown;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Schema;
 
 trait ButtonTrait
 {   
@@ -114,12 +115,35 @@ trait ButtonTrait
     | Edit
     |--------------------------------------------------------------------------
     */
-    public function editButton($screen, $id)
+    public function editButton($screen, $id, $tableName = null)
     {
+        // begin transfer to another function
+        if ($tableName == null) {
+            $tableName = $screen;
+        }
+
+        $showButton = true;
+
+        // check if role screen table has deleted_at table
+        if (Schema::hasColumn($tableName, 'deleted_at')) {
+            $model = 'App\Models\\'.ucfirst(Str::singular($screen));
+
+            // check role, if item is already deleted then dont show the edit button
+            $item = $model::withTrashed()->find($id);
+
+            if ($item && $item->trashed()) {
+
+                $showButton = false;
+            }
+
+        }
+
+        // end transfer to another fucntion
+
         return Link::make(__('Edit'))
                 ->icon('bs.pencil')
                 ->route($screen.'.edit', $id)
-                ->canSee($this->canEdit($screen));
+                ->canSee($this->canEdit($screen) && $showButton);
     }
 
     /*
