@@ -17,11 +17,11 @@ function attachBulkButtonListener() {
         isChecked = checked;
         
         // check
-        if (isChecked) {
-            console.log(`All checkboxes checked.`);
-        } else {
-            console.log(`All checkboxes unchecked.`);
-        }
+        // if (isChecked) {
+        //     console.log(`All checkboxes checked.`);
+        // } else {
+        //     console.log(`All checkboxes unchecked.`);
+        // }
     }
 }
 
