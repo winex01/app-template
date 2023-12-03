@@ -145,7 +145,7 @@ trait ButtonTrait
                 ->route($screen.'.edit', $id)
                 ->canSee($this->canEdit($screen) && $showButton);
     }
-
+    
     /*
     |--------------------------------------------------------------------------
     | Delete
