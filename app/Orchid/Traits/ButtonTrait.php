@@ -11,10 +11,12 @@ use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\DropDown;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Schema;
+use App\Orchid\Traits\ModelObjectTrait;
 
 trait ButtonTrait
 {   
+    use ModelObjectTrait;
+
     // Table Entries/Record per page value
     public $recordPerPage; 
 
@@ -143,31 +145,9 @@ trait ButtonTrait
                 ->route($screen.'.edit', $id)
                 ->canSee(
                     $this->canEdit($screen) && 
-                    $this->itemExist($tableName ?? $screen, $id) // if item is already deleted then dont show edit button
+                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id) // show button if item is not soft deleted
                 );
-    }
-    
-    // TODO:: transfer location later.
-    public function itemExist($tableName, $id)
-    {
-        $showButton = true;
-
-        // check if role screen table has deleted_at table
-        if (Schema::hasColumn($tableName, 'deleted_at')) {
-            $model = 'App\Models\\'.ucfirst(Str::singular($tableName));
-
-            // check role, if item is already deleted then dont show the edit button
-            $item = $model::withTrashed()->find($id);
-
-            if ($item && $item->trashed()) {
-
-                $showButton = false;
-            }
-
-        }
-
-        return $showButton;
-    }
+    }    
     
     /*
     |--------------------------------------------------------------------------
@@ -188,7 +168,7 @@ trait ButtonTrait
                 ])
                 ->canSee(
                     $this->canDelete($screen) &&
-                    $this->itemExist($tableName ?? $screen, $id)
+                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id)
                 );
     }
 
