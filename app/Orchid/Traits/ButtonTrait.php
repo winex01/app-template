@@ -40,6 +40,11 @@ trait ButtonTrait
                 ->width('100px')
                 ->render(function ($item) use ($screen, $buttons) {
 
+                    // add destroy button, but will show depending the if it's soft deleted or not
+                    $buttons[] = 'destroyButton';
+                    
+
+
                     $list = [];
                     foreach ($buttons as $button) {
 
@@ -63,11 +68,50 @@ trait ButtonTrait
 
     /*
     |--------------------------------------------------------------------------
+    | SoftDeleted Action Buttons
+    |--------------------------------------------------------------------------
+    */
+    // TODO:: here
+    public function destroyButton($screen, $id, $tableName = null)
+    {
+        $model = ucfirst(Str::singular($screen));
+
+        return Button::make(__('Destroy'))
+                ->icon('bs.trash3')
+                ->class('btn btn-sm btn-danger')
+                ->confirm('Are you sure you want to remove this '.Str::singular($screen).' in the database.')
+                ->method('destroy', [
+                    'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
+                    'id' => $id,
+                ])
+                ->canSee(
+                    $this->canDestroy($screen) &&
+                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id) // show only if softDeleted
+                );
+    }
+
+    // TODO:: TBD bulk destroy button, and if filter is active hide the normal bulk Delete,
+    
+    public function destroy($model, $id)
+    {
+        if ($model::withTrashed()->find($id)->forceDelete()) {
+
+            $label = str_replace('App\Models\\', '', $model);
+
+            Toast::success('You have successfully remove the '.$label.' in the database.');
+            
+        }else {
+            
+            Toast::error('Something went wrong, please contact administrator.');
+
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Pagination Entries
     |--------------------------------------------------------------------------
     */
-    
-
     public function entriesPerPageButton(array $recordPerPageOptions = [5, 10, 25, 50, 75, 100])
     {
         $options = [];
@@ -122,6 +166,7 @@ trait ButtonTrait
     {
         return Link::make(__('Add'))
                 ->icon('bs.plus-circle')
+                ->class('btn btn-primary')
                 ->href(route($screen.'.create'))
                 ->canSee($this->canCreate($screen));
     }
@@ -130,6 +175,7 @@ trait ButtonTrait
     {
         return Button::make(__('Save'))
                 ->icon('bs.check-circle')
+                ->class('btn btn-success')
                 ->method('save');
     }
 
@@ -142,10 +188,11 @@ trait ButtonTrait
     {
         return Link::make(__('Edit'))
                 ->icon('bs.pencil')
+                ->class('btn btn-sm btn-warning')
                 ->route($screen.'.edit', $id)
                 ->canSee(
                     $this->canEdit($screen) && 
-                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id) // show button if item is not soft deleted
+                    !$this->modelObjectSoftDeleted($tableName ?? $screen, $id) // ! - if item is not soft deleted then show this button
                 );
     }    
     
@@ -161,6 +208,7 @@ trait ButtonTrait
 
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
+                ->class('btn btn-sm btn-danger')
                 ->confirm('After deleting, the '.Str::singular($screen).' will be gone forever.')
                 ->method('delete', [
                     'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
@@ -168,7 +216,7 @@ trait ButtonTrait
                 ])
                 ->canSee(
                     $this->canDelete($screen) &&
-                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id)
+                    !$this->modelObjectSoftDeleted($tableName ?? $screen, $id) // ! - if item is not softDeleted then show this button
                 );
     }
 
@@ -197,8 +245,9 @@ trait ButtonTrait
     {
         $model = ucfirst(Str::singular($screen));
 
-        return Button::make(__('Bulk Delete'))
+        return Button::make(__('Delete'))
                 ->icon('bs.trash3')
+                ->class('btn btn-outline-danger')
                 ->confirm('After deleting, the '.$screen.' will be gone forever.')
                 ->method('deleteBulk', [
                     'model' => 'App\Models\\'.$model,
@@ -214,7 +263,6 @@ trait ButtonTrait
             Alert::error('Please select the row(s) to be deleted by checking the checkbox.');
 
         }else {
-
             $model::whereIn('id', $request->$screen)->delete();
     
             $label = str_replace('App\Models\\', '', $screen);

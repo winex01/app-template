@@ -60,8 +60,8 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            $this->entriesPerPageButton(),
             $this->bulkDeleteButton('roles'),
+            $this->entriesPerPageButton(),
             $this->addButton('roles'),
         ];
     }
@@ -74,7 +74,6 @@ class RoleListScreen extends Screen
     public function layout(): iterable
     {
         return [
-            // TODO:: When Trash filter is active, in action dropdown instead of edit/delete, show restore/destroy
             RoleFiltersLayout::class,
             RoleListLayout::class,
         ];
