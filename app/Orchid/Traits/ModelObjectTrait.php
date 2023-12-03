@@ -9,22 +9,20 @@ trait ModelObjectTrait
 {
     public function modelObjectSoftDeleted($tableName, $id)
     {
-        $softDeleted = false;
-
-        // check if role screen table has deleted_at table / if soft deletes is enabled
+        // Check if the table has the 'deleted_at' column for soft deletes
         if (Schema::hasColumn($tableName, 'deleted_at')) {
-            $model = 'App\Models\\'.ucfirst(Str::singular($tableName));
+            $modelClass = 'App\Models\\' . ucfirst(Str::singular($tableName));
 
-            // check if item is already deleted then dont show the edit button
-            $item = $model::withTrashed()->find($id);
+            // Retrieve the item including soft deleted items
+            $item = $modelClass::withTrashed()->find($id);
 
-            if ($item && !$item->trashed()) {
-
-                $softDeleted = true;
+            // Check if the item exists and is soft deleted
+            if ($item && $item->trashed()) {
+                return true; // Soft deleted
             }
-
         }
 
-        return $softDeleted;
+        return false; // Not soft deleted or soft delete functionality is not enabled
     }
+
 }

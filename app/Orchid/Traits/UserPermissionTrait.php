@@ -24,6 +24,11 @@ trait UserPermissionTrait
     {
         return auth()->user()->hasAccess($screen.'.bulk.delete');
     }
+    
+    public function canDestroy($screen)
+    {
+        return auth()->user()->hasAccess($screen.'.destroy');
+    }
 
     public function canAny(string $screen, array $permissions)
     {

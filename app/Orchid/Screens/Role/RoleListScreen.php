@@ -60,8 +60,8 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            $this->entriesPerPageButton(),
             $this->bulkDeleteButton('roles'),
+            $this->entriesPerPageButton(),
             $this->addButton('roles'),
         ];
     }
