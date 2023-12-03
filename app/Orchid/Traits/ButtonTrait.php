@@ -31,7 +31,7 @@ trait ButtonTrait
     /**
      * NOTE:: if you want to create new button(method) please add 'Button' text suffix.
      * example: editButton, deleteButton, restoreButton etc.
-     * check: editButton, deleteButton method.
+     * check example: editButton, deleteButton method.
      */
     public function actions($screen, $buttons = [])
     {
