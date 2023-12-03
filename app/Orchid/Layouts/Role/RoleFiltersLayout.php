@@ -14,7 +14,6 @@ class RoleFiltersLayout extends Selection
      */
     public function filters(): iterable
     {
-        // TODO:: add filter permission here, not on Filter class isDisplay method because url can still be manipulated there
         return [
             TrashFilter::class,
             RoleFilter::class,

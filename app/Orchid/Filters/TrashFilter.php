@@ -39,6 +39,9 @@ class TrashFilter extends Filter
     public function run(Builder $builder): Builder
     {
         return $builder->onlyTrashed();
+
+        // TODO:: also if user has no permission then return $builder only so it cannot be manipulated in the url address bar
+        // return $builder;
     }
 
     /**
@@ -62,5 +65,11 @@ class TrashFilter extends Filter
     public function value(): string
     {
         return $this->name().': Active';
+    }
+
+    public function isDisplay(): bool
+    {
+        // TODO:: add permission here, it it cant be manipulated in the url address bar
+        return true;
     }
 }
