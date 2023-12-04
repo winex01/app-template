@@ -9,7 +9,7 @@ trait FilterTrait
 {
     use UserPermissionTrait;
     //
-    public function withOnlyTrashFilter(array $filters) 
+    public function withTrashFilter(array $filters) 
     {
         // if authenticated has access to trash filter then append it.
         if ($this->canTrashFilter()) {
