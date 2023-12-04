@@ -43,4 +43,10 @@ trait UserPermissionTrait
 
         return auth()->user()->hasAnyAccess($actionsWithRoles);
     }
+
+    public function canTrashFilter()
+    {
+        return auth()->user()->hasAccess('trash.filter');
+    }
+
 }

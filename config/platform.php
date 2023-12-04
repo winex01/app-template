@@ -126,7 +126,9 @@ return [
      */
 
     'resource' => [
-        'stylesheets' => [],
+        'stylesheets' => [
+            '/css/custom.css'
+        ],
         'scripts'     => [
             '/js/custom.js'
         ],
@@ -304,7 +306,7 @@ return [
     |
     */
 
-    'prevents_abandonment' => true,
+    'prevents_abandonment' => false,
 
     /*
      |--------------------------------------------------------------------------

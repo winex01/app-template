@@ -2,19 +2,20 @@
 
 namespace App\Orchid\Layouts\Role;
 
+use App\Orchid\Traits\ExtendOrchidTrait;
 use Orchid\Filters\Filter;
-use App\Orchid\Filters\TrashFilter;
 use Orchid\Screen\Layouts\Selection;
 
 class RoleFiltersLayout extends Selection
 {
+    use ExtendOrchidTrait;
     /**
      * @return Filter[]
      */
     public function filters(): iterable
     {
-        return [
-            TrashFilter::class
-        ];
+        return $this->withTrashFilter([
+            // SampleFilter::class,
+        ]);
     }
 }

@@ -71,7 +71,6 @@ trait ButtonTrait
     | SoftDeleted Action Buttons
     |--------------------------------------------------------------------------
     */
-    // TODO:: here
     public function destroyButton($screen, $id, $tableName = null)
     {
         $model = ucfirst(Str::singular($screen));
@@ -91,7 +90,6 @@ trait ButtonTrait
     }
 
     // TODO:: TBD bulk destroy button, and if filter is active hide the normal bulk Delete,
-    
     public function destroy($model, $id)
     {
         if ($model::withTrashed()->find($id)->forceDelete()) {
@@ -117,18 +115,23 @@ trait ButtonTrait
         $options = [];
         foreach ($recordPerPageOptions as $value) {
             $label = $this->recordPerPage == $value ? __($value) . ' - Active' : __($value);
+            $css = $this->recordPerPage == $value ? 'btn btn-success' : 'btn btn-link';
 
-            $options[] = Button::make($label)->method('setEntriesPerPage', ['limit' => $value]);
+            $options[] = Button::make($label)
+                            ->class($css)
+                            ->method('setEntriesPerPage', ['limit' => $value]);
         }
 
         // append 'All' option
         $value = 999999;
         $optionAll = [
             'label' => $this->recordPerPage == $value ? __('All') . ' - Active' : __('All'),
-            'value' => $value
+            'value' => $value,
+            'css'   => $this->recordPerPage == $value ? 'btn btn-success' : 'btn btn-link',
         ];
 
         $options[] = Button::make($optionAll['label'])
+                        ->class($optionAll['css'])
                         ->confirm('Are you sure you want to do this? It may take a while, depending on the size of the records.')
                         ->method('setEntriesPerPage', ['limit' => $optionAll['value']]);
 

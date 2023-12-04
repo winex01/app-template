@@ -3,14 +3,16 @@
 namespace App\Orchid\Traits;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Schema;
+use App\Orchid\Traits\TableTrait;
 
 trait ModelObjectTrait
 {
+    use TableTrait;
+
     public function modelObjectSoftDeleted($tableName, $id)
     {
         // Check if the table has the 'deleted_at' column for soft deletes
-        if (Schema::hasColumn($tableName, 'deleted_at')) {
+        if ($this->tableHasColumn($tableName, 'deleted_at')) {
             $modelClass = 'App\Models\\' . ucfirst(Str::singular($tableName));
 
             // Retrieve the item including soft deleted items
