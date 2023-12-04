@@ -1,0 +1,17 @@
+/* Custom styles for active pagination item */
+.page-item.active .page-link {
+  background-color: #007bff; /* Change background color */
+  border-color: #007bff; /* Change border color */
+  color: #fff; /* Change text color */
+  font-weight: 900; /* Set maximum font weight */
+  font-size: 1.1em; /* Slightly increase the font size */
+  line-height: 1.3; /* Adjust line height for decreased vertical alignment */
+  /* Add any other styles you want to apply to the active pagination item */
+}
+
+/* Optionally, hover style for active item */
+.page-item.active .page-link:hover {
+  background-color: #0056b3; /* Change background color on hover */
+  border-color: #0056b3; /* Change border color on hover */
+  /* Add any other hover styles you prefer */
+}
