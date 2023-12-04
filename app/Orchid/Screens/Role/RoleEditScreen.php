@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens\Role;
 
+use App\Models\Role;
 use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Orchid\Platform\Models\Role;
 use Orchid\Support\Facades\Toast;
 use Orchid\Support\Facades\Layout;
+use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleEditLayout;
 use App\Orchid\Layouts\Role\RolePermissionLayout;
-use App\Orchid\Traits\ExtendOrchidTrait;
 
 class RoleEditScreen extends Screen
 {
@@ -55,7 +55,7 @@ class RoleEditScreen extends Screen
     }
 
     public function permission(): ?iterable
-    {   // TODO:: dont allow to view screen if item is already deleted_at
+    {   
         return [
             'roles.edit',
         ];

@@ -71,7 +71,6 @@ trait ButtonTrait
     | SoftDeleted Action Buttons
     |--------------------------------------------------------------------------
     */
-    // TODO:: here
     public function destroyButton($screen, $id, $tableName = null)
     {
         $model = ucfirst(Str::singular($screen));
@@ -91,7 +90,6 @@ trait ButtonTrait
     }
 
     // TODO:: TBD bulk destroy button, and if filter is active hide the normal bulk Delete,
-    
     public function destroy($model, $id)
     {
         if ($model::withTrashed()->find($id)->forceDelete()) {

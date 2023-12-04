@@ -48,4 +48,5 @@ trait UserPermissionTrait
     {
         return auth()->user()->hasAccess('trash.filter');
     }
+
 }
