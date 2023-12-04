@@ -121,7 +121,7 @@ class PlatformProvider extends OrchidServiceProvider
             ,
 
             ItemPermission::group(__('Misc.'))
-                ->addPermission('misc.trash.filter', __('Trash Filter')),
+                ->addPermission('trash.filter', __('Trash Filter')),
         ];
 
     }
