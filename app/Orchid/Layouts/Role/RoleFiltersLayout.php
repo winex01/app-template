@@ -14,7 +14,7 @@ class RoleFiltersLayout extends Selection
      */
     public function filters(): iterable
     {
-        return $this->withOnlyTrashFilter([
+        return $this->withTrashFilter([
             // SampleFilter::class,
         ]);
     }
