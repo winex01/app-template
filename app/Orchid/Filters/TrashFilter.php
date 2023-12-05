@@ -63,5 +63,4 @@ class TrashFilter extends Filter
     {
         return $this->name().': Active';
     }
-
 }
