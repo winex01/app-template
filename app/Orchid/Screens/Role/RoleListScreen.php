@@ -22,9 +22,6 @@ class RoleListScreen extends Screen
      */
     public function query(): iterable
     {
-        // TODO:: when trash is active and pagination is not page 1,
-                    // and when i remove the filter the url still has pagination, try fix or remove the url or go back to pagination 1
-
         return [
             'roles' => Role::filters(RoleFiltersLayout::class)
                             ->defaultSort('name', 'asc')
