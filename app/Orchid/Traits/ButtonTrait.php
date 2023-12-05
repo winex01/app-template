@@ -24,7 +24,7 @@ trait ButtonTrait
     public $recordPerPageOptions = [10, 25, 50, 75, 100];
     /*
     |--------------------------------------------------------------------------
-    | Actions Buttons
+    | Actions Dropdown List Buttons
     |--------------------------------------------------------------------------
     */
 
@@ -68,46 +68,7 @@ trait ButtonTrait
 
     /*
     |--------------------------------------------------------------------------
-    | SoftDeleted Action Buttons
-    |--------------------------------------------------------------------------
-    */
-    public function destroyButton($screen, $id, $tableName = null)
-    {
-        $model = ucfirst(Str::singular($screen));
-
-        return Button::make(__('Destroy'))
-                ->icon('bs.trash3')
-                ->class('btn btn-sm btn-danger')
-                ->confirm('Are you sure you want to remove this '.Str::singular($screen).' in the database.')
-                ->method('destroy', [
-                    'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
-                    'id' => $id,
-                ])
-                ->canSee(
-                    $this->canDestroy($screen) &&
-                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id) // show only if softDeleted
-                );
-    }
-
-    // TODO:: TBD bulk destroy button, and if filter is active hide the normal bulk Delete,
-    public function destroy($model, $id)
-    {
-        if ($model::withTrashed()->find($id)->forceDelete()) {
-
-            $label = str_replace('App\Models\\', '', $model);
-
-            Toast::success('You have successfully remove the '.$label.' in the database.');
-            
-        }else {
-            
-            Toast::error('Something went wrong, please contact administrator.');
-
-        }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Pagination Entries
+    | Pagination Entries Button
     |--------------------------------------------------------------------------
     */
     public function entriesPerPageButton(array $recordPerPageOptions = [5, 10, 25, 50, 75, 100])
@@ -162,7 +123,7 @@ trait ButtonTrait
 
     /*
     |--------------------------------------------------------------------------
-    | Create
+    | Create Button
     |--------------------------------------------------------------------------
     */
     public function addButton($screen)
@@ -184,7 +145,7 @@ trait ButtonTrait
 
     /*
     |--------------------------------------------------------------------------
-    | Edit
+    | Edit Button
     |--------------------------------------------------------------------------
     */
     public function editButton($screen, $id, $tableName = null)
@@ -201,7 +162,7 @@ trait ButtonTrait
     
     /*
     |--------------------------------------------------------------------------
-    | Delete
+    | Delete Button
     |--------------------------------------------------------------------------
     */
 
@@ -241,12 +202,18 @@ trait ButtonTrait
 
     /*
     |--------------------------------------------------------------------------
-    | Bulk Delete
+    | Bulk Delete Button
     |--------------------------------------------------------------------------
     */
     public function bulkDeleteButton($screen)
     {
         $model = ucfirst(Str::singular($screen));
+
+        $trashFilterOff = true;
+
+        if ($this->canTrashFilter() && request()->trash_only) {
+            $trashFilterOff = false;            
+        }
 
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
@@ -256,7 +223,11 @@ trait ButtonTrait
                     'model' => 'App\Models\\'.$model,
                     'screen' => $screen,
                 ])
-                ->canSee($this->canBulkDelete($screen));
+                ->canSee(
+                    $this->canBulkDelete($screen) &&
+                    // if trash filter is active hide the normal bulk Delete
+                    $trashFilterOff
+                );
     }
 
     public function deleteBulk($model, $screen, Request $request)
@@ -274,4 +245,50 @@ trait ButtonTrait
         }
 
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Destroy Button
+    |--------------------------------------------------------------------------
+    */
+    public function destroyButton($screen, $id, $tableName = null)
+    {
+        $model = ucfirst(Str::singular($screen));
+
+        return Button::make(__('Destroy'))
+                ->icon('bs.trash3')
+                ->class('btn btn-sm btn-danger')
+                ->confirm('Are you sure you want to remove this '.Str::singular($screen).' in the database.')
+                ->method('destroy', [
+                    'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
+                    'id' => $id,
+                ])
+                ->canSee(
+                    $this->canDestroy($screen) &&
+                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id) // show only if softDeleted
+                );
+    }
+
+    public function destroy($model, $id)
+    {
+        if ($model::withTrashed()->find($id)->forceDelete()) {
+
+            $label = str_replace('App\Models\\', '', $model);
+
+            Toast::success('You have successfully remove the '.$label.' in the database.');
+            
+        }else {
+            
+            Toast::error('Something went wrong, please contact administrator.');
+
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bulk Destroy Button
+    |--------------------------------------------------------------------------
+    */
+
+    // TODO:: here bulk destroy
 }
