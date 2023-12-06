@@ -360,11 +360,16 @@ trait ButtonTrait
             if ($item && $item->restore()) {
 
                 Toast::success('You have successfully restored the '.$this->singular($screen).'.');
+            
             } else {
+
                 Toast::error('Something went wrong or the item does not exist. Please contact the administrator.');
+
             }
         } else {
+
             Toast::error('You do not have permission to restore '.$this->singular($screen).'.');
+        
         }
     }
 
