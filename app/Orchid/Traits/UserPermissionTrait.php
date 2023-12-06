@@ -35,6 +35,16 @@ trait UserPermissionTrait
         return auth()->user()->hasAccess($screen.'.bulk.destroy');
     }
 
+    public function canRestore($screen)
+    {
+        return auth()->user()->hasAccess($screen.'.restore');
+    }
+
+    public function canBulkRestore($screen)
+    {
+        return auth()->user()->hasAccess($screen.'.bulk.restore');
+    }
+
     public function canAny(string $screen, array $permissions)
     {
         // append dot notation

@@ -51,10 +51,11 @@ class RolePermissionLayout extends Rows
             ->map(fn (CheckBox $checkbox, $key) => $key === 0
                 ? $checkbox->title($title)
                 : $checkbox)
-            ->chunk(4)
+            ->chunk(2)
             ->map(fn (Collection $checkboxes) => Group::make($checkboxes->toArray())
                 ->alignEnd()
-                ->autoWidth());
+                // ->autoWidth()
+            );
     }
 
     private function makeCheckBox(Collection $chunks): CheckBox

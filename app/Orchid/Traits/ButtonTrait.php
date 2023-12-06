@@ -3,12 +3,13 @@
 namespace App\Orchid\Traits;
 
 use Orchid\Screen\TD;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\Button;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Toast;
+use App\Orchid\Traits\FilterTrait;
+use App\Orchid\Traits\StringTrait;
 use Orchid\Screen\Actions\DropDown;
 use Illuminate\Support\Facades\Cookie;
 use App\Orchid\Traits\ModelObjectTrait;
@@ -16,6 +17,10 @@ use App\Orchid\Traits\ModelObjectTrait;
 trait ButtonTrait
 {   
     use ModelObjectTrait;
+    use FilterTrait;
+    use StringTrait;
+
+    // NOTE:: Screen = The permission prefix define in the platform provider, i mostly use table name as my prefix in permissions.
 
     // Table Entries/Record per page value
     public $recordPerPage; 
@@ -156,7 +161,7 @@ trait ButtonTrait
                 ->route($screen.'.edit', $id)
                 ->canSee(
                     $this->canEdit($screen) && 
-                    !$this->modelObjectSoftDeleted($tableName ?? $screen, $id) // ! - if item is not soft deleted then show this button
+                    !$this->softDeleted($tableName ?? $screen, $id) // ! - if item is not soft deleted then show this button
                 );
     }    
     
@@ -168,19 +173,17 @@ trait ButtonTrait
 
     public function deleteButton($screen, $id, $tableName = null)
     {
-        $model = ucfirst(Str::singular($screen));
-
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
                 ->class('btn btn-sm btn-danger')
-                ->confirm('After deleting, the '.Str::singular($screen).' will be gone forever.')
+                ->confirm('After deleting, the '.$this->singular($screen).' will be gone forever.')
                 ->method('delete', [
-                    'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
+                    'model' => $this->pathModel($screen), // you can override this if you chain the deleteButton
                     'id' => $id,
                 ])
                 ->canSee(
                     $this->canDelete($screen) &&
-                    !$this->modelObjectSoftDeleted($tableName ?? $screen, $id) // ! - if item is not softDeleted then show this button
+                    !$this->softDeleted($tableName ?? $screen, $id) // ! - if item is not softDeleted then show this button
                 );
     }
 
@@ -188,9 +191,7 @@ trait ButtonTrait
     {
         if ($model::destroy($id)) {
 
-            $label = str_replace('App\Models\\', '', $model);
-
-            Toast::success('You have successfully deleted the '.$label.'.');
+            Toast::success('You have successfully deleted the '.$this->singular($model).'.');
             
         }else {
             
@@ -207,26 +208,18 @@ trait ButtonTrait
     */
     public function bulkDeleteButton($screen)
     {
-        $model = ucfirst(Str::singular($screen));
-
-        $trashFilterOff = true;
-
-        if ($this->canTrashFilter() && request()->trash_only) {
-            $trashFilterOff = false;            
-        }
-
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
                 ->class('btn-delete btn btn-outline-danger')
-                ->confirm('After deleting, the selected '.$screen.' will be gone forever.')
+                ->confirm('After deleting, the selected '.$this->plural($screen).' will be gone forever.')
                 ->method('deleteBulk', [
-                    'model' => 'App\Models\\'.$model,
+                    'model' => $this->pathModel($screen),
                     'screen' => $screen,
                 ])
                 ->canSee(
                     $this->canBulkDelete($screen) &&
                     // if trash filter is active hide the normal bulk Delete
-                    $trashFilterOff
+                    !$this->trashFilterState()
                 );
     }
 
@@ -239,9 +232,7 @@ trait ButtonTrait
         }else {
             $model::whereIn('id', $request->$screen)->delete();
     
-            $label = str_replace('App\Models\\', '', $screen);
-
-            Toast::success('You have successfully deleted the selected '.$label.'.');
+            Toast::success('You have successfully deleted the selected '.$this->plural($screen).'.');
         }
 
     }
@@ -253,19 +244,17 @@ trait ButtonTrait
     */
     public function destroyButton($screen, $id, $tableName = null)
     {
-        $model = ucfirst(Str::singular($screen));
-
         return Button::make(__('Destroy'))
                 ->icon('bs.trash3')
                 ->class('btn btn-sm btn-danger')
-                ->confirm('Are you sure you want to remove this '.Str::singular($screen).' in the database.')
+                ->confirm('Are you sure you want to remove this '.$this->singular($screen).' in the database.')
                 ->method('destroy', [
-                    'model' => 'App\Models\\'.$model, // you can override this if you chain the deleteButton
+                    'model' => $this->pathModel($screen), // you can override this if you chain the deleteButton
                     'id' => $id,
                 ])
                 ->canSee(
                     $this->canDestroy($screen) &&
-                    $this->modelObjectSoftDeleted($tableName ?? $screen, $id) // show only if softDeleted
+                    $this->softDeleted($tableName ?? $screen, $id) // show only if softDeleted
                 );
     }
 
@@ -273,9 +262,7 @@ trait ButtonTrait
     {
         if ($model::withTrashed()->find($id)->forceDelete()) {
 
-            $label = str_replace('App\Models\\', '', $model);
-
-            Toast::success('You have successfully remove the '.$label.' in the database.');
+            Toast::success('You have successfully remove the '.$this->singular($this->screen($model)).' in the database.');
             
         }else {
             
@@ -291,26 +278,18 @@ trait ButtonTrait
     */
     public function bulkDestroyButton($screen)
     {
-        $model = ucfirst(Str::singular($screen));
-
-        $trashFilterOff = false;
-
-        if ($this->canTrashFilter() && request()->trash_only) {
-            $trashFilterOff = true;            
-        }
-
         return Button::make(__('Destroy'))
                 ->icon('bs.trash3')
                 ->class('btn-delete btn btn-outline-danger')
-                ->confirm('Are you sure you want to remove the selected '.$screen.' in the database.')
+                ->confirm('Are you sure you want to remove the selected '.$this->plural($screen).' in the database.')
                 ->method('destroyBulk', [
-                    'model' => 'App\Models\\'.$model,
+                    'model' => $this->pathModel($screen),
                     'screen' => $screen,
                 ])
                 ->canSee(
                     $this->canBulkDestroy($screen) &&
                     // if trash filter is not active hide the bulk destroy
-                    $trashFilterOff
+                    $this->trashFilterState()
                 );
     }
 
@@ -325,11 +304,67 @@ trait ButtonTrait
                 $record->forceDelete();
             }
 
-            $label = str_replace('App\Models\\', '', $screen);
-
-            Toast::success('You have successfully removed the selected '.$label.' from the database.');
+            Toast::success('You have successfully removed the selected '.$this->plural($screen).' from the database.');
         }
     }
 
-    // TODO:: restore button
+    /*
+    |--------------------------------------------------------------------------
+    | Restore Button
+    |--------------------------------------------------------------------------
+    */
+    public function restoreButton($screen, $id, $tableName = null)
+    {
+        return Button::make(__('Restore'))
+                ->icon('bs.arrow-counterclockwise')
+                ->class('btn btn-sm btn-success')
+                ->confirm('Are you sure you want to restore this '.$this->singular($screen).'.')
+                ->method('restore', [
+                    'model' => $this->pathModel($screen), // you can override this if you chain the deleteButton
+                    'id' => $id,
+                ])
+                ->canSee(
+                    $this->canRestore($screen) &&
+                    $this->softDeleted($tableName ?? $screen, $id) // show only if softDeleted
+                );
+    }
+
+    public function restore($model, $id)
+    {
+        $screen = $this->screen($model);
+
+        if ($this->canRestore($screen)) {
+            $item = $model::withTrashed()->find($id);
+
+            if ($item && $item->restore()) {
+
+                Toast::success('You have successfully restored the '.$this->singular($screen).'.');
+            
+            } else {
+
+                Toast::error('Something went wrong or the item does not exist. Please contact the administrator.');
+
+            }
+        } else {
+
+            Toast::error('You do not have permission to restore '.$this->singular($screen).'.');
+        
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bulk Restore Button
+    |--------------------------------------------------------------------------
+    */
+
+    // TODO:: next!
+
+    
+
+
+
+    // TODO:: for every button method add also the permission in if else statement.
 }
+

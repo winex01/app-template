@@ -38,4 +38,15 @@ trait FilterTrait
 
         return $filters;
     }
+
+    public function trashFilterState()
+    {
+        $state = false;
+
+        if ($this->canTrashFilter() && request()->trash_only) {
+            $state = true;            
+        }
+
+        return $state;
+    }
 }
