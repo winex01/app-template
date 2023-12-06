@@ -217,8 +217,8 @@ trait ButtonTrait
 
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
-                ->class('btn btn-outline-danger')
-                ->confirm('After deleting, the '.$screen.' will be gone forever.')
+                ->class('btn-delete btn btn-outline-danger')
+                ->confirm('After deleting, the selected '.$screen.' will be gone forever.')
                 ->method('deleteBulk', [
                     'model' => 'App\Models\\'.$model,
                     'screen' => $screen,
@@ -289,6 +289,47 @@ trait ButtonTrait
     | Bulk Destroy Button
     |--------------------------------------------------------------------------
     */
+    public function bulkDestroyButton($screen)
+    {
+        $model = ucfirst(Str::singular($screen));
 
-    // TODO:: here bulk destroy
+        $trashFilterOff = false;
+
+        if ($this->canTrashFilter() && request()->trash_only) {
+            $trashFilterOff = true;            
+        }
+
+        return Button::make(__('Destroy'))
+                ->icon('bs.trash3')
+                ->class('btn-delete btn btn-outline-danger')
+                ->confirm('Are you sure you want to remove the selected '.$screen.' in the database.')
+                ->method('destroyBulk', [
+                    'model' => 'App\Models\\'.$model,
+                    'screen' => $screen,
+                ])
+                ->canSee(
+                    $this->canBulkDestroy($screen) &&
+                    // if trash filter is not active hide the bulk destroy
+                    $trashFilterOff
+                );
+    }
+
+    public function destroyBulk($model, $screen, Request $request)
+    {
+        if (!$request->$screen) {
+            Alert::error('Please select the row(s) to be destroyed by checking the checkbox.');
+        } else {
+            $records = $model::whereIn('id', $request->$screen)->onlyTrashed()->get();
+
+            foreach ($records as $record) {
+                $record->forceDelete();
+            }
+
+            $label = str_replace('App\Models\\', '', $screen);
+
+            Toast::success('You have successfully removed the selected '.$label.' from the database.');
+        }
+    }
+
+    // TODO:: restore button
 }

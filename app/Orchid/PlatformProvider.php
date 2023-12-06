@@ -118,6 +118,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('roles.delete', __('Roles Delete'))
                 ->addPermission('roles.bulk.delete', __('Roles Bulk Delete'))
                 ->addPermission('roles.destroy', __('Roles Destroy'))
+                ->addPermission('roles.bulk.destroy', __('Roles Bulk Destroy'))
             ,
 
             ItemPermission::group(__('Misc.'))
