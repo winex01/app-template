@@ -1,25 +1,30 @@
 function attachBulkButtonListener() {
-    document.addEventListener('change', function(event) {
-        if (event.target.matches('#bulkButton')) {
+    const bulkButton = document.querySelector('#bulkButton');
+    if (bulkButton) {
+        bulkButton.addEventListener('change', function(event) {
             handleBulkButtonClick(event.target.checked);
-        } else {
+        });
+    }
+
+    const checkboxes = document.querySelectorAll('.table .form-check-input');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
             updateButtonClass();
-        }
+        });
+    });
+}
+
+function handleBulkButtonClick(checked) {
+    let checkboxes = document.querySelectorAll('.table .form-check-input');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = checked;
     });
 
-    function handleBulkButtonClick(checked) {
-        let checkboxes = document.querySelectorAll('.form-check-input');
-        
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = checked;
-        });
-
-        updateButtonClass();
-    }
+    updateButtonClass();
 }
 
 function updateButtonClass() {
-    const anyChecked = Array.from(document.querySelectorAll('.form-check-input'))
+    const anyChecked = Array.from(document.querySelectorAll('.table .form-check-input'))
         .some(checkbox => checkbox.checked);
 
     const button = document.querySelector('.btn-delete');
