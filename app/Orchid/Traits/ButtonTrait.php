@@ -217,7 +217,7 @@ trait ButtonTrait
 
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
-                ->class('btn btn-outline-danger')
+                ->class('btn-delete btn btn-outline-danger')
                 ->confirm('After deleting, the selected '.$screen.' will be gone forever.')
                 ->method('deleteBulk', [
                     'model' => 'App\Models\\'.$model,
@@ -301,7 +301,7 @@ trait ButtonTrait
 
         return Button::make(__('Destroy'))
                 ->icon('bs.trash3')
-                ->class('btn btn-outline-danger')
+                ->class('btn-delete btn btn-outline-danger')
                 ->confirm('Are you sure you want to remove the selected '.$screen.' in the database.')
                 ->method('destroyBulk', [
                     'model' => 'App\Models\\'.$model,
