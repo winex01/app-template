@@ -6,16 +6,24 @@ use Illuminate\Support\Str;
 
 trait StringTrait
 {
-    //
-    public function pathModelToScreen($pathModel)
+    /**
+     * @param: App/Models/Role
+     * @return: roles
+     */
+    public function screen($string)
     {
-        // params ex: App/Models/Role
-
-        $screen = str_replace('App\Models\\', '', $pathModel);
+        $screen = str_replace('App\Models\\', '', $string);
     
-        $screen = Str::plural(strtolower($screen));
+        return $this->plural(strtolower($screen));
+    }
 
-        return $screen;
+    /**
+     * @param: roles
+     * @return: App/Models/Role
+     */
+    public function pathModel($string)
+    {
+        return 'App\Models\\'.ucfirst($this->singular($string));
     }
 
     public function plural($string)
