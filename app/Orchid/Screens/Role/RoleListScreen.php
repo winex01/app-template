@@ -61,6 +61,7 @@ class RoleListScreen extends Screen
     {
         return [
             $this->bulkDeleteButton('roles'),
+            $this->bulkDestroyButton('roles'),
             $this->entriesPerPageButton(),
             $this->addButton('roles'),
         ];
