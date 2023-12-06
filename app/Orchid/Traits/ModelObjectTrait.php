@@ -9,7 +9,7 @@ trait ModelObjectTrait
 {
     use TableTrait;
 
-    public function modelObjectSoftDeleted($tableName, $id)
+    public function softDeleted($tableName, $id)
     {
         // Check if the table has the 'deleted_at' column for soft deletes
         if ($this->tableHasColumn($tableName, 'deleted_at')) {

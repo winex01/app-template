@@ -47,6 +47,7 @@ class RoleListLayout extends Table
 
             // Actions
             $this->actions('roles', [
+                'restoreButton',
                 'editButton',
                 'deleteButton',
             ]), 
