@@ -25,6 +25,20 @@ trait ButtonTrait
 
     // Entries/Record options, ex: 10, 25, 50 etc..
     public $recordPerPageOptions = [10, 25, 50, 75, 100];
+   
+    public function buttons($screen)
+    {
+        return [
+            $this->bulkDeleteButton($screen),
+            $this->bulkDestroyButton($screen),
+            $this->bulkRestoreButton($screen),
+            $this->entriesPerPageButton(),
+            $this->addButton($screen),
+
+            // TODO:: export
+        ];
+    }
+   
     /*
     |--------------------------------------------------------------------------
     | Actions Dropdown List Buttons
