@@ -187,8 +187,22 @@ trait ButtonTrait
 
     public function delete($model, $id)
     {
+        $screen = $this->screen($model);
+
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('destroy', $screen);
+            return;
+        }
+
+        // validation
+        if (!isset($id) || empty($id)) {
+            $this->toastError();
+            return;
+        }
+
         if ($model::destroy($id)) {
-            $this->toastSuccess('deleted', $this->singular($this->screen($model)));
+            $this->toastSuccess('deleted', $this->singular($screen));
         }else {
             $this->toastError();
         }
@@ -219,14 +233,23 @@ trait ButtonTrait
 
     public function bulkDelete($model, $screen, Request $request)
     {
-        if (!$request->ids) {
-            $this->bulkValidationError('deleted');
-        }else {
-            $model::whereIn('id', $request->ids)->delete();
-    
-            $this->toastSuccess('deleted', $this->plural($screen));
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('delete', $screen);
+            return;
         }
 
+        // validation
+        if (!request()->ids) {
+            $this->bulkValidationError('delete');
+            return;
+        }
+
+        if ($model::whereIn('id', $request->ids)->delete()) {
+            $this->toastSuccess('deleted', $this->plural($screen));
+        }else {
+            $this->toastError();
+        }
     }
 
     /*
@@ -252,8 +275,22 @@ trait ButtonTrait
 
     public function destroy($model, $id)
     {
+        $screen = $this->screen($model);
+
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('destroy', $screen);
+            return;
+        }
+
+        // validation
+        if (!isset($id) || empty($id)) {
+            $this->toastError();
+            return;
+        }
+
         if ($model::withTrashed()->find($id)->forceDelete()) {
-            $this->toastSuccess('destroyed', $this->singular($this->screen($model)));
+            $this->toastSuccess('destroyed', $this->singular($screen));
         }else {
             $this->toastError();
         }
@@ -281,19 +318,27 @@ trait ButtonTrait
                 );
     }
 
-    public function bulkDestroy($model, $screen, Request $request)
+    public function bulkDestroy($model, $screen)
     {
-        if (!$request->ids) {
-            $this->bulkValidationError('destroyed');
-        } else {
-            $records = $model::whereIn('id', $request->bulkdIds)->onlyTrashed()->get();
-
-            foreach ($records as $record) {
-                $record->forceDelete();
-            }
-
-            $this->toastSuccess('destroyed', $this->plural($screen));
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('destroy', $screen);
+            return;
         }
+
+        // validation
+        if (!request()->ids) {
+            $this->bulkValidationError('destroyed');
+            return;
+        }
+
+        $records = $model::whereIn('id', request()->ids)->onlyTrashed()->get();
+
+        foreach ($records as $record) {
+            $record->forceDelete();
+        }
+
+        $this->toastSuccess('destroyed', $this->plural($screen));
     }
 
     /*
@@ -324,6 +369,12 @@ trait ButtonTrait
         // check permission
         if (!$this->canRestore($screen)) {
             $this->toastNotAuthorized('restore', $screen);
+            return;
+        }
+
+        // validation
+        if (!isset($id) || empty($id)) {
+            $this->toastError();
             return;
         }
 
@@ -359,7 +410,7 @@ trait ButtonTrait
                 );
     }
 
-    public function bulkRestore($model, $screen, Request $request)
+    public function bulkRestore($model, $screen)
     {
         // check permission
         if (!$this->canRestore($screen)) {
@@ -368,30 +419,26 @@ trait ButtonTrait
         }
 
         // validation
-        if (!$request->ids) {
-            $this->bulkValidationError('destroyed');
+        if (!request()->ids) {
+            $this->bulkValidationError('restored');
             return;
         }
         
-        $restoredCount = 0;
-        foreach ($request->ids as $id) {
+        $count = 0;
+        foreach (request()->ids as $id) {
             $item = $model::withTrashed()->find($id);
             
             if ($item && $item->restore()) {
-                $restoredCount++;
+                $count++;
             }
         }
 
-        // check if any items were restored
-        if ($restoredCount > 0) {
+        // check if any items is restored
+        if ($count > 0) {
             $this->toastSuccess('restored', $this->plural($screen));
         } else {
             $this->toastError();
         }
     }
-
-    // TODO:: refactor code, and make it readable just like in the method bulkRestore, separate it by permission, validation and etc..
-    // TODO:: for every button method add also the permission in if else statement.
-    
 }
 
