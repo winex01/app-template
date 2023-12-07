@@ -176,7 +176,7 @@ trait ButtonTrait
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
                 ->class('btn btn-sm btn-danger')
-                ->confirm('After deleting, the '.$this->singular($screen).' will be gone forever.')
+                ->confirm($this->confirmMessage('delete', $this->singular($screen)))
                 ->method('delete', [
                     'model' => $this->pathModel($screen), // you can override this if you chain the deleteButton
                     'id' => $id,
@@ -190,13 +190,9 @@ trait ButtonTrait
     public function delete($model, $id)
     {
         if ($model::destroy($id)) {
-
-            Toast::success('You have successfully deleted the '.$this->singular($model).'.');
-            
+            $this->toastSuccess('deleted', $this->singular($this->screen($model)));
         }else {
-            
-            Toast::error('Something went wrong, please contact administrator.');
-
+            $this->toastError();
         }
     }
 
@@ -211,7 +207,7 @@ trait ButtonTrait
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
                 ->class('btn-delete btn btn-outline-danger')
-                ->confirm('After deleting, the selected '.$this->plural($screen).' will be gone forever.')
+                ->confirm($this->confirmMessage('delete', $this->plural($screen)))
                 ->method('deleteBulk', [
                     'model' => $this->pathModel($screen),
                     'screen' => $screen,
@@ -226,13 +222,11 @@ trait ButtonTrait
     public function deleteBulk($model, $screen, Request $request)
     {
         if (!$request->$screen) {
-
-            Alert::error('Please select the row(s) to be deleted by checking the checkbox.');
-
+            $this->bulkValidationError('deleted');
         }else {
             $model::whereIn('id', $request->$screen)->delete();
     
-            Toast::success('You have successfully deleted the selected '.$this->plural($screen).'.');
+            $this->toastSuccess('deleted', $this->plural($screen));
         }
 
     }
@@ -247,7 +241,7 @@ trait ButtonTrait
         return Button::make(__('Destroy'))
                 ->icon('bs.trash3')
                 ->class('btn btn-sm btn-danger')
-                ->confirm('Are you sure you want to remove this '.$this->singular($screen).' in the database.')
+                ->confirm($this->confirmMessage('destroy', $this->singular($screen)))
                 ->method('destroy', [
                     'model' => $this->pathModel($screen), // you can override this if you chain the deleteButton
                     'id' => $id,
@@ -261,13 +255,9 @@ trait ButtonTrait
     public function destroy($model, $id)
     {
         if ($model::withTrashed()->find($id)->forceDelete()) {
-
-            Toast::success('You have successfully remove the '.$this->singular($this->screen($model)).' in the database.');
-            
+            $this->toastSuccess('destroyed', $this->singular($this->screen($model)));
         }else {
-            
-            Toast::error('Something went wrong, please contact administrator.');
-
+            $this->toastError();
         }
     }
 
@@ -281,7 +271,7 @@ trait ButtonTrait
         return Button::make(__('Destroy'))
                 ->icon('bs.trash3')
                 ->class('btn-delete btn btn-outline-danger')
-                ->confirm('Are you sure you want to remove the selected '.$this->plural($screen).' in the database.')
+                ->confirm($this->confirmMessage('destroy', $this->plural($screen)))
                 ->method('destroyBulk', [
                     'model' => $this->pathModel($screen),
                     'screen' => $screen,
@@ -296,7 +286,7 @@ trait ButtonTrait
     public function destroyBulk($model, $screen, Request $request)
     {
         if (!$request->$screen) {
-            Alert::error('Please select the row(s) to be destroyed by checking the checkbox.');
+            $this->bulkValidationError('destroyed');
         } else {
             $records = $model::whereIn('id', $request->$screen)->onlyTrashed()->get();
 
@@ -304,7 +294,7 @@ trait ButtonTrait
                 $record->forceDelete();
             }
 
-            Toast::success('You have successfully removed the selected '.$this->plural($screen).' from the database.');
+            $this->toastSuccess('destroyed', $this->plural($screen));
         }
     }
 
@@ -318,7 +308,7 @@ trait ButtonTrait
         return Button::make(__('Restore'))
                 ->icon('bs.arrow-counterclockwise')
                 ->class('btn btn-sm btn-success')
-                ->confirm('Are you sure you want to restore this '.$this->singular($screen).'.')
+                ->confirm($this->confirmMessage('restore', $this->singular($screen)))
                 ->method('restore', [
                     'model' => $this->pathModel($screen), // you can override this if you chain the deleteButton
                     'id' => $id,
@@ -337,18 +327,12 @@ trait ButtonTrait
             $item = $model::withTrashed()->find($id);
 
             if ($item && $item->restore()) {
-
-                Toast::success('You have successfully restored the '.$this->singular($screen).'.');
-            
+                $this->toastSuccess('restored', $this->singular($screen));
             } else {
-
-                Toast::error('Something went wrong or the item does not exist. Please contact the administrator.');
-
+                $this->toastError();
             }
         } else {
-
-            Toast::error('You do not have permission to restore '.$this->singular($screen).'.');
-        
+            $this->toastNotAuthorized('restore', $screen);
         }
     }
 
@@ -366,5 +350,6 @@ trait ButtonTrait
 
 
     // TODO:: for every button method add also the permission in if else statement.
+    
 }
 
