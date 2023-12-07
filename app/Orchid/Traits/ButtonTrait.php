@@ -6,8 +6,6 @@ use Orchid\Screen\TD;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\Button;
-use Orchid\Support\Facades\Alert;
-use Orchid\Support\Facades\Toast;
 use App\Orchid\Traits\FilterTrait;
 use App\Orchid\Traits\StringTrait;
 use Orchid\Screen\Actions\DropDown;
@@ -189,8 +187,22 @@ trait ButtonTrait
 
     public function delete($model, $id)
     {
+        $screen = $this->screen($model);
+
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('destroy', $screen);
+            return;
+        }
+
+        // validation
+        if (!isset($id) || empty($id)) {
+            $this->toastError();
+            return;
+        }
+
         if ($model::destroy($id)) {
-            $this->toastSuccess('deleted', $this->singular($this->screen($model)));
+            $this->toastSuccess('deleted', $this->singular($screen));
         }else {
             $this->toastError();
         }
@@ -206,9 +218,9 @@ trait ButtonTrait
     {
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
-                ->class('btn-delete btn btn-outline-danger')
+                ->class('btn-delete  btn btn-outline-danger')
                 ->confirm($this->confirmMessage('delete', $this->plural($screen)))
-                ->method('deleteBulk', [
+                ->method('bulkDelete', [
                     'model' => $this->pathModel($screen),
                     'screen' => $screen,
                 ])
@@ -219,16 +231,25 @@ trait ButtonTrait
                 );
     }
 
-    public function deleteBulk($model, $screen, Request $request)
+    public function bulkDelete($model, $screen, Request $request)
     {
-        if (!$request->$screen) {
-            $this->bulkValidationError('deleted');
-        }else {
-            $model::whereIn('id', $request->$screen)->delete();
-    
-            $this->toastSuccess('deleted', $this->plural($screen));
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('delete', $screen);
+            return;
         }
 
+        // validation
+        if (!request()->ids) {
+            $this->bulkValidationError('delete');
+            return;
+        }
+
+        if ($model::whereIn('id', $request->ids)->delete()) {
+            $this->toastSuccess('deleted', $this->plural($screen));
+        }else {
+            $this->toastError();
+        }
     }
 
     /*
@@ -254,8 +275,22 @@ trait ButtonTrait
 
     public function destroy($model, $id)
     {
+        $screen = $this->screen($model);
+
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('destroy', $screen);
+            return;
+        }
+
+        // validation
+        if (!isset($id) || empty($id)) {
+            $this->toastError();
+            return;
+        }
+
         if ($model::withTrashed()->find($id)->forceDelete()) {
-            $this->toastSuccess('destroyed', $this->singular($this->screen($model)));
+            $this->toastSuccess('destroyed', $this->singular($screen));
         }else {
             $this->toastError();
         }
@@ -272,7 +307,7 @@ trait ButtonTrait
                 ->icon('bs.trash3')
                 ->class('btn-delete btn btn-outline-danger')
                 ->confirm($this->confirmMessage('destroy', $this->plural($screen)))
-                ->method('destroyBulk', [
+                ->method('bulkDestroy', [
                     'model' => $this->pathModel($screen),
                     'screen' => $screen,
                 ])
@@ -283,19 +318,27 @@ trait ButtonTrait
                 );
     }
 
-    public function destroyBulk($model, $screen, Request $request)
+    public function bulkDestroy($model, $screen)
     {
-        if (!$request->$screen) {
-            $this->bulkValidationError('destroyed');
-        } else {
-            $records = $model::whereIn('id', $request->$screen)->onlyTrashed()->get();
-
-            foreach ($records as $record) {
-                $record->forceDelete();
-            }
-
-            $this->toastSuccess('destroyed', $this->plural($screen));
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('destroy', $screen);
+            return;
         }
+
+        // validation
+        if (!request()->ids) {
+            $this->bulkValidationError('destroyed');
+            return;
+        }
+
+        $records = $model::whereIn('id', request()->ids)->onlyTrashed()->get();
+
+        foreach ($records as $record) {
+            $record->forceDelete();
+        }
+
+        $this->toastSuccess('destroyed', $this->plural($screen));
     }
 
     /*
@@ -323,16 +366,24 @@ trait ButtonTrait
     {
         $screen = $this->screen($model);
 
-        if ($this->canRestore($screen)) {
-            $item = $model::withTrashed()->find($id);
-
-            if ($item && $item->restore()) {
-                $this->toastSuccess('restored', $this->singular($screen));
-            } else {
-                $this->toastError();
-            }
-        } else {
+        // check permission
+        if (!$this->canRestore($screen)) {
             $this->toastNotAuthorized('restore', $screen);
+            return;
+        }
+
+        // validation
+        if (!isset($id) || empty($id)) {
+            $this->toastError();
+            return;
+        }
+
+        $item = $model::withTrashed()->find($id);
+
+        if ($item && $item->restore()) {
+            $this->toastSuccess('restored', $this->singular($screen));
+        } else {
+            $this->toastError();
         }
     }
 
@@ -342,14 +393,52 @@ trait ButtonTrait
     | Bulk Restore Button
     |--------------------------------------------------------------------------
     */
+    public function bulkRestoreButton($screen)
+    {
+        return Button::make(__('Restore'))
+                ->icon('bs.arrow-counterclockwise')
+                ->class('btn-restore btn btn-outline-danger')
+                ->confirm($this->confirmMessage('restore', $this->plural($screen)))
+                ->method('bulkRestore', [
+                    'model' => $this->pathModel($screen),
+                    'screen' => $screen,
+                ])
+                ->canSee(
+                    $this->canBulkRestore($screen) &&
+                    // if trash filter is not active hide the bulk destroy
+                    $this->trashFilterState()
+                );
+    }
 
-    // TODO:: next!
+    public function bulkRestore($model, $screen)
+    {
+        // check permission
+        if (!$this->canRestore($screen)) {
+            $this->toastNotAuthorized('restore', $screen);
+            return;
+        }
 
-    
+        // validation
+        if (!request()->ids) {
+            $this->bulkValidationError('restored');
+            return;
+        }
+        
+        $count = 0;
+        foreach (request()->ids as $id) {
+            $item = $model::withTrashed()->find($id);
+            
+            if ($item && $item->restore()) {
+                $count++;
+            }
+        }
 
-
-
-    // TODO:: for every button method add also the permission in if else statement.
-    
+        // check if any items is restored
+        if ($count > 0) {
+            $this->toastSuccess('restored', $this->plural($screen));
+        } else {
+            $this->toastError();
+        }
+    }
 }
 

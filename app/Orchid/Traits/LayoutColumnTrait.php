@@ -10,10 +10,9 @@ trait LayoutColumnTrait
     //
     public function columnBulkAction($screen)
     {
-        $temp = $screen.'[]';
         return TD::make()
                 ->width('1px')
-                ->render(fn($screen) => CheckBox::make($temp)
+                ->render(fn($screen) => CheckBox::make('ids[]')
                     ->value($screen->id)
                     ->checked(false)
                 )->canSee($this->canBulkDelete($screen));
