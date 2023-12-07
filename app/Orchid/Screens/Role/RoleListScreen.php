@@ -59,14 +59,7 @@ class RoleListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [
-            // TODO:: add to trait method for common buttons
-            $this->bulkDeleteButton('roles'),
-            $this->bulkDestroyButton('roles'),
-            $this->bulkRestoreButton('roles'),
-            $this->entriesPerPageButton(),
-            $this->addButton('roles'),
-        ];
+        return $this->buttons('roles');
     }
 
     /**
