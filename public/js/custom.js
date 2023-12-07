@@ -27,13 +27,18 @@ function updateButtonClass() {
     const anyChecked = Array.from(document.querySelectorAll('.table .form-check-input'))
         .some(checkbox => checkbox.checked);
 
-    const button = document.querySelector('.btn-delete');
+    const deleteButton = document.querySelector('.btn-delete');
+    const restoreButton = document.querySelector('.btn-restore'); // Assuming this class exists for the restore button
+
     if (anyChecked) {
-        button.classList.add('btn-danger');
+        deleteButton.classList.add('btn-danger');
+        restoreButton.classList.add('btn-success');
     } else {
-        button.classList.remove('btn-danger');
+        deleteButton.classList.remove('btn-danger');
+        restoreButton.classList.remove('btn-success');
     }
 }
+
 
 function addColumnHeaderCheckbox() {
     const tableRowsWithCheckboxes = document.querySelectorAll('.table tbody tr .form-check-input');
