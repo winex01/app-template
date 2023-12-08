@@ -42,10 +42,11 @@ class SearchFilter extends Filter
     {
         $searchTerm = $this->request->search;
 
-        return $builder
-                ->where('slug', 'like', "%$searchTerm%")
-                ->orWhere('name', 'like', "%$searchTerm%")
-                ;
+        return $builder->where(function ($query) use ($searchTerm) {
+            foreach ($this->searchTableColumns() as $column) {
+                $query->orWhere($column, 'like', "%$searchTerm%");
+            }
+        });
     }
 
     /**
@@ -62,5 +63,11 @@ class SearchFilter extends Filter
                 ->type('search')
                 ->value($this->request->search)
         ];
+    }
+
+    public function searchTableColumns()
+    {
+        // Note:: Override this in Filters Layout to use.
+        return ['test']; 
     }
 }

@@ -16,7 +16,15 @@ class RoleFiltersLayout extends Selection
     public function filters(): iterable
     {
         return $this->withTrashFilter([
-            SearchFilter::class,
+            new class extends SearchFilter {
+                public function searchTableColumns()
+                {
+                    return [
+                        'slug', 
+                        'name'
+                    ];
+                }
+            }
         ]);
     }
 }
