@@ -12,6 +12,7 @@ trait LayoutColumnTrait
     {
         return TD::make()
                 ->width('1px')
+                ->cantHide()
                 ->render(fn($screen) => CheckBox::make('ids[]')
                     ->value($screen->id)
                     ->checked(false)
