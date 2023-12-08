@@ -9,6 +9,14 @@ use App\Orchid\Filters\ExtendedOrchidFilter;
 
 class SearchFilter extends ExtendedOrchidFilter
 {
+    public $searchTableColumns;
+
+    public function __construct(array $searchTableColumns)
+    {
+        parent::__construct();
+
+        $this->searchTableColumns = $searchTableColumns;
+    }
     /**
      * The displayable name of the filter.
      *
@@ -43,7 +51,7 @@ class SearchFilter extends ExtendedOrchidFilter
         $searchTerm = $this->request->search;
 
         return $builder->where(function ($query) use ($searchTerm) {
-            foreach ($this->searchTableColumns() as $column) {
+            foreach ($this->searchTableColumns as $column) {
                 $query->orWhere($column, 'like', "%$searchTerm%");
             }
         });
@@ -63,11 +71,5 @@ class SearchFilter extends ExtendedOrchidFilter
                 ->type('search')
                 ->value($this->request->search)
         ];
-    }
-
-    public function searchTableColumns()
-    {
-        // Note:: Override this in Filters Layout to use.
-        return ['test']; 
     }
 }
