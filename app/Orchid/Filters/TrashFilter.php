@@ -52,6 +52,7 @@ class TrashFilter extends Filter
             CheckBox::make('trash_only')
                 ->title('Trashed Only')
                 ->placeholder('Show Deleted Items.')
+                ->value($this->request->get('trash_only'))
                 ->sendTrueOrFalse()
         ];
     }
