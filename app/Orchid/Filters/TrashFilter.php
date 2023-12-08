@@ -3,11 +3,11 @@
 namespace App\Orchid\Filters;
 
 use Orchid\Screen\Field;
-use Orchid\Filters\Filter;
 use Orchid\Screen\Fields\CheckBox;
 use Illuminate\Database\Eloquent\Builder;
+use App\Orchid\Filters\ExtendedOrchidFilter;
 
-class TrashFilter extends Filter
+class TrashFilter extends ExtendedOrchidFilter
 {
     /**
      * The displayable name of the filter.
