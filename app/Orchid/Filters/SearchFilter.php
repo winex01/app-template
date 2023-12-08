@@ -58,8 +58,8 @@ class SearchFilter extends Filter
     {
         return [
             Input::make('search')
-                ->placeholder('Search...')
                 ->title('Search')
+                ->placeholder('Search...')
                 ->type('search')
                 ->value($this->request->search)
         ];
