@@ -31,7 +31,7 @@ class SearchTableListener extends Listener
             Layout::rows([
                 Input::make('search')
                     ->placeholder('Search...')
-                    ->type('text')
+                    ->type('search')
                     ->class('form-control rounded')
                     ->style('width: 25%; float: right;'),
             ]),
@@ -50,6 +50,6 @@ class SearchTableListener extends Listener
     {
         debug( $request->all());
 
-        return $repository->set('search', $request->searchInput);
+        return $repository->set('search', $request->search);
     }
 }
