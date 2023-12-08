@@ -4,10 +4,10 @@ namespace App\Orchid\Filters;
 
 use Orchid\Screen\Field;
 use Orchid\Filters\Filter;
-use Orchid\Screen\Fields\CheckBox;
+use Orchid\Screen\Fields\Input;
 use Illuminate\Database\Eloquent\Builder;
 
-class TrashFilter extends Filter
+class SearchFilter extends Filter
 {
     /**
      * The displayable name of the filter.
@@ -16,7 +16,7 @@ class TrashFilter extends Filter
      */
     public function name(): string
     {
-        return 'Trash';
+        return 'Search';
     }
 
     /**
@@ -26,7 +26,9 @@ class TrashFilter extends Filter
      */
     public function parameters(): ?array
     {
-        return ['trash_only'];
+        return [
+            'search'
+        ];
     }
 
     /**
@@ -38,7 +40,13 @@ class TrashFilter extends Filter
      */
     public function run(Builder $builder): Builder
     {
-        return $builder->onlyTrashed();
+        $searchTerm = $this->request->search;
+
+        return $builder->where(function ($query) use ($searchTerm) {
+            foreach ($this->searchTableColumns() as $column) {
+                $query->orWhere($column, 'like', "%$searchTerm%");
+            }
+        });
     }
 
     /**
@@ -49,19 +57,17 @@ class TrashFilter extends Filter
     public function display(): iterable
     {
         return [
-            CheckBox::make('trash_only')
-                ->title('Trashed Only')
-                ->placeholder('Show Deleted Items.')
-                ->value($this->request->get('trash_only'))
-                ->sendTrueOrFalse()
+            Input::make('search')
+                ->title('Search')
+                ->placeholder('Search...')
+                ->type('search')
+                ->value($this->request->search)
         ];
     }
 
-    /**
-     * Value to be displayed
-     */
-    public function value(): string
+    public function searchTableColumns()
     {
-        return $this->name().': Active';
+        // Note:: Override this in Filters Layout to use.
+        return ['test']; 
     }
 }

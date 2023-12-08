@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Orchid\Screens\Role;
 
 use App\Models\Role;
+use App\Orchid\Filters\SearchFilter;
 use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
 use App\Orchid\Traits\ExtendOrchidTrait;
