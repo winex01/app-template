@@ -24,7 +24,7 @@ class RoleFiltersLayout extends Selection
                         'name'
                     ];
                 }
-            }
+            },
         ]);
     }
 }

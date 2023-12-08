@@ -33,7 +33,9 @@ trait FilterTrait
         if ($this->canTrashFilter()) {
 
             // Add the customTrashFilter to the beginning of the $filters array
-            array_unshift($filters, get_class($this->trashFilter()));
+            // array_unshift($filters, get_class($this->trashFilter()));
+            
+            $filters[] = $this->trashFilter();
         }
 
         return $filters;
