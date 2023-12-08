@@ -3,11 +3,11 @@
 namespace App\Orchid\Filters;
 
 use Orchid\Screen\Field;
-use Orchid\Filters\Filter;
 use Orchid\Screen\Fields\Input;
 use Illuminate\Database\Eloquent\Builder;
+use App\Orchid\Filters\ExtendedOrchidFilter;
 
-class SearchFilter extends Filter
+class SearchFilter extends ExtendedOrchidFilter
 {
     /**
      * The displayable name of the filter.

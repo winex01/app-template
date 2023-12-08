@@ -15,6 +15,7 @@ class RoleFiltersLayout extends Selection
      */
     public function filters(): iterable
     {
+        // TODO:: refactor to make this clean and resuable
         return $this->withTrashFilter([
             new class extends SearchFilter {
                 public function searchTableColumns()
