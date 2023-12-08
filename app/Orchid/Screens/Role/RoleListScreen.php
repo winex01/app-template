@@ -10,6 +10,7 @@ use Orchid\Screen\Screen;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
 use App\Orchid\Layouts\Role\RoleFiltersLayout;
+use App\Orchid\Layouts\SearchTableListener;
 
 class RoleListScreen extends Screen
 {
@@ -22,6 +23,9 @@ class RoleListScreen extends Screen
      */
     public function query(): iterable
     {
+        // TODO:: find a way to capture the request->search
+        // TODO:: apply url query string filter
+
         return [
             'roles' => Role::filters(RoleFiltersLayout::class)
                             ->defaultSort('name', 'asc')
@@ -70,6 +74,7 @@ class RoleListScreen extends Screen
     public function layout(): iterable
     {
         return [
+            SearchTableListener::class,
             RoleFiltersLayout::class,
             RoleListLayout::class,
         ];
