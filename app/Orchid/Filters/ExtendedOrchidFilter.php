@@ -10,15 +10,7 @@ class ExtendedOrchidFilter extends BaseFilter
 {
 
     /**
-     * I overrided this resetLink method(please check service provider), so
-     * when a filter is active and remove it will always remove the page and reset to 
-     * page 1, because there are times when table has a lot of records and 
-     * you have an active filter and goes to page 2 or more and when you remove 
-     * the filter the page 2 or the page where you at will still be the same
-     * and it might confuse the user if he/she see's the no records found, because
-     * the pagination goes to page 2 isnstead of page 1.
-     * ex: base example for this is trash filter.
-     *
+     * Remove pagination everytime filter is remove.
      * @return string
      */
     public function resetLink(): string
