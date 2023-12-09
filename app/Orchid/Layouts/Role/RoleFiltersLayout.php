@@ -16,24 +16,9 @@ class RoleFiltersLayout extends Selection
      */
     public function filters(): iterable
     {
-        // TODO:: make this reusable and avoid update anomaly 
-                  // perhaps create a method trait that can be chain?
-
-        $test = [
-            'name',
-            'slug',
-        ];
-
-
-        $filters = [
-            new SearchFilter($test)
-        ];
-
-        if ($this->canTrashFilter()) {
-            $filters[] = TrashFilter::class;
-        }
-
-        return $filters;
+        return $this->checkFilterPermission([
+            new SearchFilter(['name', 'slug']),
+            TrashFilter::class,
+        ]);
     }
-    
 }

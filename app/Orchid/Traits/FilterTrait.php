@@ -8,16 +8,18 @@ use App\Orchid\Traits\UserPermissionTrait;
 trait FilterTrait
 {
     use UserPermissionTrait;
-    //
-    public function withTrashFilter(array $filters) 
+    
+    public function checkFilterPermission(array $filterClass)
     {
-        // if authenticated user have access to trash filter then append it.
-        if ($this->canTrashFilter()) {
+        $allowedFilters = [];
 
-            $filters[] = TrashFilter::class;
+        foreach ($filterClass as $filter) {
+            if ((is_object($filter) && $filter->permission()) || (is_string($filter) && (new $filter())->permission())) {
+                $allowedFilters[] = $filter;
+            }
         }
 
-        return $filters;
+        return $allowedFilters;
     }
 
     public function trashFilterState()

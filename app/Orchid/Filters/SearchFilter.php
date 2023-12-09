@@ -17,6 +17,12 @@ class SearchFilter extends ExtendedOrchidFilter
 
         $this->searchTableColumns = $searchTableColumns;
     }
+
+    public function permission(): bool
+    {
+        return true;
+    }
+
     /**
      * The displayable name of the filter.
      *

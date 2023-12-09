@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Filters;
 
+use App\Orchid\Traits\ExtendOrchidTrait;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\CheckBox;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,6 +10,13 @@ use App\Orchid\Filters\ExtendedOrchidFilter;
 
 class TrashFilter extends ExtendedOrchidFilter
 {
+    use ExtendOrchidTrait;
+
+    public function permission()
+    {
+        return $this->canTrashFilter();
+    }
+
     /**
      * The displayable name of the filter.
      *
