@@ -18,9 +18,6 @@ trait ButtonTrait
     use FilterTrait;
     use StringTrait;
 
-    // NOTE:: Screen = The permission prefix define in the platform provider, i mostly use table name as my prefix in permissions.
-
-    // Table Entries/Record per page value
     public $recordPerPage; 
 
     public function buttons($screen)
