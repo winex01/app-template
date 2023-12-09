@@ -18,14 +18,8 @@ trait ButtonTrait
     use FilterTrait;
     use StringTrait;
 
-    // NOTE:: Screen = The permission prefix define in the platform provider, i mostly use table name as my prefix in permissions.
-
-    // Table Entries/Record per page value
     public $recordPerPage; 
 
-    // Entries/Record options, ex: 10, 25, 50 etc..
-    public $recordPerPageOptions = [10, 25, 50, 75, 100];
-   
     public function buttons($screen)
     {
         return [
@@ -118,7 +112,7 @@ trait ButtonTrait
                 ->list($options);
     }
 
-    public function getEntriesPerPage(int $defaultLimit = 10)
+    public function getEntriesPerPage(int $defaultLimit = 5)
     {
         $this->recordPerPage = $defaultLimit;
 
