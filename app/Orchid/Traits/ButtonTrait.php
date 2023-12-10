@@ -26,10 +26,18 @@ trait ButtonTrait
             $this->bulkDeleteButton($screen),
             $this->bulkDestroyButton($screen),
             $this->bulkRestoreButton($screen),
-            $this->entriesPerPageButton(),
-            $this->addButton($screen),
+            
 
             // TODO:: export
+            Button::make('Export CSV')
+                ->icon('cloud-download')
+                ->method('export')
+                ->rawClick(),
+            
+
+            
+            $this->entriesPerPageButton(),
+            $this->addButton($screen),
         ];
     }
    
@@ -82,6 +90,7 @@ trait ButtonTrait
     | Pagination Entries Button
     |--------------------------------------------------------------------------
     */
+    // TODO:: when changing entries per page reset pagination to 1
     public function entriesPerPageButton(array $recordPerPageOptions = [5, 10, 25, 50, 75, 100])
     {
         $options = [];
