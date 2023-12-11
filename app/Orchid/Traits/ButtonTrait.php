@@ -31,8 +31,9 @@ trait ButtonTrait
             // TODO:: export
             Button::make('Export CSV')
                 ->icon('cloud-download')
-                ->method('export')
-                ->rawClick(),
+                ->method('export', request()->all()),
+                // ->rawClick(),
+                
             
 
             

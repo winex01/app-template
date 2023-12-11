@@ -25,12 +25,10 @@ class RoleListScreen extends Screen
      */
     public function query(): iterable
     {
-        $roles = Role::filters(RoleFiltersLayout::class)
-                    ->defaultSort('name', 'asc');
-
         return [
-            'roles' => $roles->paginate($this->getEntriesPerPage()),
-            'export' => $roles->get()
+            'roles' => Role::filters(RoleFiltersLayout::class)
+                        ->defaultSort('name', 'asc')
+                        ->paginate($this->getEntriesPerPage()),
         ];
     }
 
@@ -83,13 +81,22 @@ class RoleListScreen extends Screen
     // TODO::
     public function export()
     {   
-        // dd(
-            
-        // );  
-        foreach ($this->query()['roles']->items() as $item) {
-            dump($item->name);
-        }      
+        // $roles = Role::filters(RoleFiltersLayout::class)
+
+        dump(request()->all());
+
+        // $roles = Role::
+        $roles = Role::filters(RoleFiltersLayout::class)
+                    ->defaultSort('name', 'asc');
+                    // ->get();   
         
+
+        dump($roles);
+
+        // foreach ($roles->get() as $role) {
+        //     dump($role->name);
+        // } 
+
         dd();
     }
 }
