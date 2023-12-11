@@ -61,15 +61,6 @@ class TrashFilter extends ExtendedOrchidFilter
                 ->title('Trashed Only')
                 ->placeholder('Show Deleted Items.')
                 ->value($this->request->get('trash_only'))
-                ->sendTrueOrFalse()
         ];
-    }
-
-    /**
-     * Value to be displayed
-     */
-    public function value(): string
-    {
-        return $this->name().': Active';
     }
 }

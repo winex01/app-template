@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Orchid\Screens\Role;
 
 use App\Models\Role;
-use App\Orchid\Filters\SearchFilter;
 use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
+use App\Exports\RolesExport;
+use App\Orchid\Filters\SearchFilter;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
 use App\Orchid\Layouts\Role\RoleFiltersLayout;
@@ -25,8 +27,8 @@ class RoleListScreen extends Screen
     {
         return [
             'roles' => Role::filters(RoleFiltersLayout::class)
-                            ->defaultSort('name', 'asc')
-                            ->paginate($this->getEntriesPerPage()),
+                        ->defaultSort('name', 'asc')
+                        ->paginate($this->getEntriesPerPage()),
         ];
     }
 
@@ -74,5 +76,27 @@ class RoleListScreen extends Screen
             RoleFiltersLayout::class,
             RoleListLayout::class,
         ];
+    }
+
+    // TODO::
+    public function export()
+    {   
+        // $roles = Role::filters(RoleFiltersLayout::class)
+
+        dump(request()->all());
+
+        // $roles = Role::
+        $roles = Role::filters(RoleFiltersLayout::class)
+                    ->defaultSort('name', 'asc');
+                    // ->get();   
+        
+
+        dump($roles);
+
+        // foreach ($roles->get() as $role) {
+        //     dump($role->name);
+        // } 
+
+        dd();
     }
 }
