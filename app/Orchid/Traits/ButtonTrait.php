@@ -26,17 +26,7 @@ trait ButtonTrait
             $this->bulkDeleteButton($screen),
             $this->bulkDestroyButton($screen),
             $this->bulkRestoreButton($screen),
-            
-
-            // TODO:: refactor this to trait method
-            Button::make('Export')
-                ->icon('cloud-download')
-                ->method('export', request()->all())
-                ->rawClick(),
-                
-            
-
-            
+            $this->exportButton($screen),
             $this->entriesPerPageButton(),
             $this->addButton($screen),
         ];
