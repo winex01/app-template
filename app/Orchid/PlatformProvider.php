@@ -112,15 +112,16 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('platform.systems.users', __('Users')),
 
             ItemPermission::group(__('Roles'))
-                ->addPermission('roles.list', __('1. List'))
-                ->addPermission('roles.create', __('2. Create'))
-                ->addPermission('roles.edit', __('3. Edit'))
-                ->addPermission('roles.delete', __('4. Delete'))
-                ->addPermission('roles.bulk.delete', __('5. Bulk Delete'))
-                ->addPermission('roles.destroy', __('6. Destroy'))
-                ->addPermission('roles.bulk.destroy', __('7. Bulk Destroy'))
-                ->addPermission('roles.restore', __('8. Restore'))
-                ->addPermission('roles.bulk.restore', __('9. Bulk Restore'))
+                ->addPermission('roles.list', __('List'))
+                ->addPermission('roles.create', __('Create'))
+                ->addPermission('roles.edit', __('Edit'))
+                ->addPermission('roles.delete', __('Delete'))
+                ->addPermission('roles.bulk.delete', __('Bulk Delete'))
+                ->addPermission('roles.export', __('Export'))
+                ->addPermission('roles.destroy', __('Destroy'))
+                ->addPermission('roles.bulk.destroy', __('Bulk Destroy'))
+                ->addPermission('roles.restore', __('Restore'))
+                ->addPermission('roles.bulk.restore', __('Bulk Restore'))
             ,
 
             ItemPermission::group(__('Misc.'))

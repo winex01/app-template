@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Role;
+use App\Orchid\Layouts\Role\RoleFiltersLayout;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
 class RolesExport implements FromCollection
@@ -12,6 +13,8 @@ class RolesExport implements FromCollection
     */
     public function collection()
     {
-        return Role::all();
+        return Role::filters(RoleFiltersLayout::class)
+                ->defaultSort('name', 'asc')
+                ->get();
     }
 }
