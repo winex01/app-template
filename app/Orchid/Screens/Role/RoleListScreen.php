@@ -87,15 +87,15 @@ class RoleListScreen extends Screen
 
         // $roles = Role::
         $roles = Role::filters(RoleFiltersLayout::class)
-                    ->defaultSort('name', 'asc');
-                    // ->get();   
+                    ->defaultSort('name', 'asc')
+                    ->get();   
         
 
         dump($roles);
 
-        // foreach ($roles->get() as $role) {
-        //     dump($role->name);
-        // } 
+        foreach ($roles as $role) {
+            dump($role->name);
+        } 
 
         dd();
     }
