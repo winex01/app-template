@@ -63,5 +63,9 @@ trait UserPermissionTrait
     {
         return auth()->user()->hasAccess('trash.filter');
     }
-
+    
+    public function canExport($screen)
+    {
+        return auth()->user()->hasAccess($screen.'.export');
+    }
 }
