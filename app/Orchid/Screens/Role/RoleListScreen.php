@@ -37,15 +37,40 @@ class RoleListScreen extends Screen
         // TODO:: create modal and have options to select from: Excel, Excel2007, PDF, CSV
         // TODO:: create auto generated file name
 
-        if (!$this->canExport('roles')) {
+        $screen = $this->screen();
+        if (!$this->canExport($screen)) {
             
-            return $this->toastNotAuthorized('export', 'roles');
+            return $this->toastNotAuthorized('export', $screen);
         }
 
         return Excel::download(
-            new BaseExport($this->query()['roles']), 
-            'test123.pdf'
+            new BaseExport($this->query()[$screen]), 
+            $screen.'.pdf'
         );
+    }
+
+    // TODO:: refactor into trait method
+    public function screen()
+    {
+        // Get the URL
+        $url = request()->url();
+
+        // Get segments of the URL
+        $segments = explode('/', rtrim(parse_url($url, PHP_URL_PATH), '/'));
+
+        // Variable to store the screen value
+        $screen = '';
+
+        // Check if the last segment is 'export'
+        if (end($segments) === 'export' && count($segments) >= 2) {
+            // Get the second-to-last segment as the screen value
+            $screen = $segments[count($segments) - 2];
+        } else {
+            // Get the last segment as the screen value
+            $screen = end($segments);
+        }
+
+        return $screen;
     }
 
     /**
