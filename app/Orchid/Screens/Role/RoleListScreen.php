@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens\Role;
 
-use App\Exports\RolesExport;
 use App\Models\Role;
 use Orchid\Screen\Action;
 use Orchid\Screen\Screen;
+use App\Exports\BaseExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Orchid\Traits\ExtendOrchidTrait;
 use App\Orchid\Layouts\Role\RoleListLayout;
@@ -28,9 +28,24 @@ class RoleListScreen extends Screen
             'roles' => Role::filters(RoleFiltersLayout::class)
                         ->defaultSort('name', 'asc')
                         ->paginate($this->getEntriesPerPage()),
-            
-            'export' => RolesExport::class,
         ];
+    }
+
+    // TODO:: make it resuable and no update anomaly
+    public function export()
+    {   
+        // TODO:: create modal and have options to select from: Excel, Excel2007, PDF, CSV
+        // TODO:: create auto generated file name
+
+        if (!$this->canExport('roles')) {
+            
+            return $this->toastNotAuthorized('export', 'roles');
+        }
+
+        return Excel::download(
+            new BaseExport($this->query()['roles']), 
+            'test123.pdf'
+        );
     }
 
     /**
@@ -77,12 +92,6 @@ class RoleListScreen extends Screen
             RoleFiltersLayout::class,
             RoleListLayout::class,
         ];
-    }
-
-    // TODO:: make it resuable and no update anomaly
-    public function export()
-    {   
-        return Excel::download(new ($this->query()['export']), 'test123.csv');
     }
 }
     
