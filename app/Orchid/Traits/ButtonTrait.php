@@ -28,11 +28,11 @@ trait ButtonTrait
             $this->bulkRestoreButton($screen),
             
 
-            // TODO:: export
+            // TODO:: refactor this to trait method
             Button::make('Export CSV')
                 ->icon('cloud-download')
-                ->method('export', request()->all()),
-                // ->rawClick(),
+                ->method('export', request()->all())
+                ->rawClick(),
                 
             
 
