@@ -29,7 +29,7 @@ trait ButtonTrait
             
 
             // TODO:: refactor this to trait method
-            Button::make('Export CSV')
+            Button::make('Export')
                 ->icon('cloud-download')
                 ->method('export', request()->all())
                 ->rawClick(),

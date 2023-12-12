@@ -28,6 +28,8 @@ class RoleListScreen extends Screen
             'roles' => Role::filters(RoleFiltersLayout::class)
                         ->defaultSort('name', 'asc')
                         ->paginate($this->getEntriesPerPage()),
+            
+            'export' => RolesExport::class,
         ];
     }
 
@@ -80,7 +82,7 @@ class RoleListScreen extends Screen
     // TODO:: make it resuable and no update anomaly
     public function export()
     {   
-        return Excel::download(new RolesExport, 'test123.csv');
+        return Excel::download(new ($this->query()['export']), 'test123.csv');
     }
 }
     
