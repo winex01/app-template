@@ -3,6 +3,7 @@
 namespace App\Orchid\Traits;
 
 use App\Exports\BaseExport;
+use Illuminate\Support\Str;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Maatwebsite\Excel\Facades\Excel;
@@ -35,8 +36,7 @@ trait ExportTrait
                         ->rawClick(),
                         
                     
-                ]);
-                // TODO:: canSee permission
+                ])->canSee($this->canExport($screen));
     }
 
     public function export($fileType)
@@ -50,7 +50,7 @@ trait ExportTrait
 
         return Excel::download(
             new BaseExport($this->query()[$screen]), 
-            $screen.'.'.$fileType,
+            Str::upper($screen).'_'.date('Y-m-d_H-i-s').'.'.$fileType
         );
     }
 
