@@ -28,7 +28,6 @@ class RoleListLayout extends Table
 
             TD::make('name', __('Name'))
                 ->sort()
-                ->cantHide()
                 ->filter(Input::make()),
             
             TD::make('slug', __('Slug'))
