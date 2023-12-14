@@ -29,23 +29,31 @@ function updateButtonClass() {
 
     const bulkDangerButtons = document.querySelectorAll('.bulk-danger');
     const bulkSuccessButtons = document.querySelectorAll('.bulk-success');
+    const bulkInfoButtons = document.querySelectorAll('.bulk-btn');
+    const bulkWarningButtons = document.querySelectorAll('.bulk-warning');
+    const bulkPrimaryButtons = document.querySelectorAll('.bulk-primary');
+    const bulkDarkButtons = document.querySelectorAll('.bulk-dark');
 
-    bulkDangerButtons.forEach(button => {
-        if (anyChecked) {
-            button.classList.add('btn-danger');
-        } else {
-            button.classList.remove('btn-danger');
-        }
-    });
+    const buttonClasses = [
+        { buttons: bulkDangerButtons, classToAdd: 'btn-danger' },
+        { buttons: bulkSuccessButtons, classToAdd: 'btn-success' },
+        { buttons: bulkInfoButtons, classToAdd: 'btn-info' },
+        { buttons: bulkWarningButtons, classToAdd: 'btn-warning' },
+        { buttons: bulkPrimaryButtons, classToAdd: 'btn-primary' },
+        { buttons: bulkDarkButtons, classToAdd: 'btn-dark' },
+    ];
 
-    bulkSuccessButtons.forEach(button => {
-        if (anyChecked) {
-            button.classList.add('btn-success');
-        } else {
-            button.classList.remove('btn-success');
-        }
+    buttonClasses.forEach(({ buttons, classToAdd }) => {
+        buttons.forEach(button => {
+            if (anyChecked) {
+                button.classList.add(classToAdd);
+            } else {
+                button.classList.remove(classToAdd);
+            }
+        });
     });
 }
+
 
 function addColumnHeaderCheckbox() {
     const tableRowsWithCheckboxes = document.querySelectorAll('.table tbody tr .form-check-input');
