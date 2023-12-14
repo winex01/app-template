@@ -27,15 +27,15 @@ function updateButtonClass() {
     const anyChecked = Array.from(document.querySelectorAll('.table .form-check-input'))
         .some(checkbox => checkbox.checked);
 
-    const deleteButton = document.querySelector('.btn-delete');
-    const restoreButton = document.querySelector('.btn-restore'); // Assuming this class exists for the restore button
+    const bulkDangerButton = document.querySelector('.bulk-danger');
+    const bulkSuccessButton = document.querySelector('.bulk-success');
 
     if (anyChecked) {
-        deleteButton.classList.add('btn-danger');
-        restoreButton.classList.add('btn-success');
+        bulkDangerButton.classList.add('btn-danger');
+        bulkSuccessButton.classList.add('btn-success');
     } else {
-        deleteButton.classList.remove('btn-danger');
-        restoreButton.classList.remove('btn-success');
+        bulkDangerButton.classList.remove('btn-danger');
+        bulkSuccessButton.classList.remove('btn-success');
     }
 }
 

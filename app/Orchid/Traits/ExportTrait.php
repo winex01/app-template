@@ -13,6 +13,7 @@ trait ExportTrait
     public function exportButton($screen)
     {
         return DropDown::make('Export')
+                ->class('bulk-success btn btn-link')
                 ->icon('cloud-download')
                 ->list([
                     Button::make('CSV')
