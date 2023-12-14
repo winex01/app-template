@@ -27,18 +27,25 @@ function updateButtonClass() {
     const anyChecked = Array.from(document.querySelectorAll('.table .form-check-input'))
         .some(checkbox => checkbox.checked);
 
-    const bulkDangerButton = document.querySelector('.bulk-danger');
-    const bulkSuccessButton = document.querySelector('.bulk-success');
+    const bulkDangerButtons = document.querySelectorAll('.bulk-danger');
+    const bulkSuccessButtons = document.querySelectorAll('.bulk-success');
 
-    if (anyChecked) {
-        bulkDangerButton.classList.add('btn-danger');
-        bulkSuccessButton.classList.add('btn-success');
-    } else {
-        bulkDangerButton.classList.remove('btn-danger');
-        bulkSuccessButton.classList.remove('btn-success');
-    }
+    bulkDangerButtons.forEach(button => {
+        if (anyChecked) {
+            button.classList.add('btn-danger');
+        } else {
+            button.classList.remove('btn-danger');
+        }
+    });
+
+    bulkSuccessButtons.forEach(button => {
+        if (anyChecked) {
+            button.classList.add('btn-success');
+        } else {
+            button.classList.remove('btn-success');
+        }
+    });
 }
-
 
 function addColumnHeaderCheckbox() {
     const tableRowsWithCheckboxes = document.querySelectorAll('.table tbody tr .form-check-input');
