@@ -27,16 +27,31 @@ function updateButtonClass() {
     const anyChecked = Array.from(document.querySelectorAll('.table .form-check-input'))
         .some(checkbox => checkbox.checked);
 
-    const deleteButton = document.querySelector('.btn-delete');
-    const restoreButton = document.querySelector('.btn-restore'); // Assuming this class exists for the restore button
+    const bulkDangerButtons = document.querySelectorAll('.bulk-danger');
+    const bulkSuccessButtons = document.querySelectorAll('.bulk-success');
+    const bulkInfoButtons = document.querySelectorAll('.bulk-btn');
+    const bulkWarningButtons = document.querySelectorAll('.bulk-warning');
+    const bulkPrimaryButtons = document.querySelectorAll('.bulk-primary');
+    const bulkDarkButtons = document.querySelectorAll('.bulk-dark');
 
-    if (anyChecked) {
-        deleteButton.classList.add('btn-danger');
-        restoreButton.classList.add('btn-success');
-    } else {
-        deleteButton.classList.remove('btn-danger');
-        restoreButton.classList.remove('btn-success');
-    }
+    const buttonClasses = [
+        { buttons: bulkDangerButtons, classToAdd: 'btn-danger' },
+        { buttons: bulkSuccessButtons, classToAdd: 'btn-success' },
+        { buttons: bulkInfoButtons, classToAdd: 'btn-info' },
+        { buttons: bulkWarningButtons, classToAdd: 'btn-warning' },
+        { buttons: bulkPrimaryButtons, classToAdd: 'btn-primary' },
+        { buttons: bulkDarkButtons, classToAdd: 'btn-dark' },
+    ];
+
+    buttonClasses.forEach(({ buttons, classToAdd }) => {
+        buttons.forEach(button => {
+            if (anyChecked) {
+                button.classList.add(classToAdd);
+            } else {
+                button.classList.remove(classToAdd);
+            }
+        });
+    });
 }
 
 

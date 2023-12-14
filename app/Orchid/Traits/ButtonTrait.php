@@ -226,7 +226,7 @@ trait ButtonTrait
     {
         return Button::make(__('Delete'))
                 ->icon('bs.trash3')
-                ->class('btn-delete  btn btn-outline-danger')
+                ->class('bulk-danger  btn btn-outline-danger')
                 ->confirm($this->confirmMessage('delete', $this->plural($screen)))
                 ->method('bulkDelete', [
                     'model' => $this->pathModel($screen),
@@ -313,7 +313,7 @@ trait ButtonTrait
     {
         return Button::make(__('Destroy'))
                 ->icon('bs.trash3')
-                ->class('btn-delete btn btn-outline-danger')
+                ->class('bulk-danger btn btn-outline-danger')
                 ->confirm($this->confirmMessage('destroy', $this->plural($screen)))
                 ->method('bulkDestroy', [
                     'model' => $this->pathModel($screen),
@@ -358,7 +358,7 @@ trait ButtonTrait
     {
         return Button::make(__('Restore'))
                 ->icon('bs.arrow-counterclockwise')
-                ->class('btn btn-sm btn-success')
+                ->class('btn btn-sm btn-warning')
                 ->confirm($this->confirmMessage('restore', $this->singular($screen)))
                 ->method('restore', [
                     'model' => $this->pathModel($screen), // you can override this if you chain the deleteButton
@@ -405,7 +405,7 @@ trait ButtonTrait
     {
         return Button::make(__('Restore'))
                 ->icon('bs.arrow-counterclockwise')
-                ->class('btn-restore btn btn-outline-danger')
+                ->class('bulk-warning btn btn-outline-warning')
                 ->confirm($this->confirmMessage('restore', $this->plural($screen)))
                 ->method('bulkRestore', [
                     'model' => $this->pathModel($screen),
