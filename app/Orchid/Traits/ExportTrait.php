@@ -49,8 +49,22 @@ trait ExportTrait
             return $this->toastNotAuthorized('export', $screen);
         }
 
+        $collections = $this->query()[$screen]; // Retrieve the underlying collection
+
+        $bulkIds = request()->ids;
+
+        // if bulk checkbox is checked
+        if ($bulkIds) {
+
+            $filteredItems = $collections->filter(function ($item) use ($bulkIds) {
+                return in_array($item->id, $bulkIds);
+            });
+        
+            $collections = $filteredItems;
+        }
+
         return Excel::download(
-            new BaseExport($this->query()[$screen]), 
+            new BaseExport($collections), 
             Str::upper($screen).'_'.date('Y-m-d_H-i-s').'.'.$fileType
         );
     }
