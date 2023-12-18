@@ -13,6 +13,9 @@ class BaseExport implements FromCollection
         $this->collection = $collection;
         
         $this->filterCollection();
+
+        dd(config('app.timezone'));
+
     }
 
     /**
