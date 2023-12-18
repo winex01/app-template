@@ -8,7 +8,7 @@ use Orchid\Screen\TD;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Table;
 use App\Orchid\Traits\ExtendOrchidTrait;
-use Orchid\Screen\Components\Cells\DateTimeSplit;
+use App\View\Components\WinexDateTimeSplit;
 
 class RoleListLayout extends Table
 {
@@ -35,12 +35,12 @@ class RoleListLayout extends Table
                 ->filter(Input::make()),
 
             TD::make('created_at', __('Created'))
-                ->usingComponent(DateTimeSplit::class)
+                ->usingComponent(WinexDateTimeSplit::class)
                 ->defaultHidden()
                 ->sort(),
 
             TD::make('updated_at', __('Last edit'))
-                ->usingComponent(DateTimeSplit::class)
+                ->usingComponent(WinexDateTimeSplit::class)
                 ->sort(),
 
             // Actions
