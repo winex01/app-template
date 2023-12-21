@@ -27,14 +27,18 @@ class BaseExport implements FromCollection, WithHeadings
     public function columns()
     {
         return [
-            'name', 'slug', ...$this->dates()
+            'name', 
+            ...$this->dates()
         ];
     }
 
     // Method to retrieve date columns
     public function dates()
     {
-        return ['created_at', 'updated_at'];
+        return [
+            'created_at', 
+            'updated_at'
+        ];
     }
 
     public function headings(): array
@@ -61,5 +65,21 @@ class BaseExport implements FromCollection, WithHeadings
                 return $value;
             })->only($this->columns())->toArray();
         });
+    }
+
+    public function getValueBinder(): CustomValueBinder
+    {
+        return new class extends ValueBinder implements WithCustomValueBinder {
+            public function bindValue(Cell $cell, $value)
+            {
+                // Check if the value is a date and apply custom formatting
+                if ($value instanceof Carbon) {
+                    $cell->setValueExplicit($value->format('m/d/Y h:i:s A'), DataType::TYPE_STRING);
+                    return true;
+                }
+                // For other values, use default binding
+                return parent::bindValue($cell, $value);
+            }
+        };
     }
 }
