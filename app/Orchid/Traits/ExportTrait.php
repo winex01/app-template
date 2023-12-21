@@ -15,16 +15,6 @@ trait ExportTrait
                 ->class('bulk-success btn btn-link')
                 ->icon('cloud-download')
                 ->list([
-                    Button::make('CSV')
-                        ->icon('bs.filetype-csv')
-                        ->method('csv', request()->all())
-                        ->rawClick(),
-                    
-                    Button::make('PDF')
-                        ->icon('bs.filetype-pdf')
-                        ->method('pdf', request()->all())
-                        ->rawClick(),
-
                     Button::make('XLSX')
                         ->icon('bs.file-spreadsheet')
                         ->method('xlsx', request()->all())
@@ -35,7 +25,15 @@ trait ExportTrait
                         ->method('xls', request()->all())
                         ->rawClick(),
                         
+                    Button::make('CSV')
+                        ->icon('bs.filetype-csv')
+                        ->method('csv', request()->all())
+                        ->rawClick(),
                     
+                    Button::make('PDF')
+                        ->icon('bs.filetype-pdf')
+                        ->method('pdf', request()->all())
+                        ->rawClick(), 
                 ])->canSee($this->canExport($screen));
     }
 

@@ -7,5 +7,12 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 
 class RolesExport extends BaseExport implements FromCollection
 {
-    
+    public function columns()
+    {
+        return [
+            'name', 
+            'slug', 
+            ...$this->dates()
+        ];
+    }
 }
