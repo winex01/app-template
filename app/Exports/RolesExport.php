@@ -7,13 +7,12 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 
 class RolesExport extends BaseExport implements FromCollection
 {
-    public function columns()
+    public function excludeColumns()
     {
         return [
-            'name', 
-            'slug', 
-            'created_at', 
-            'updated_at', 
+            'id',
+            'deleted_at',
+            'permissions',
         ];
     }
 }
