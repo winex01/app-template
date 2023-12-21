@@ -12,7 +12,8 @@ class RolesExport extends BaseExport implements FromCollection
         return [
             'name', 
             'slug', 
-            ...$this->dates()
+            'created_at', 
+            'updated_at', 
         ];
     }
 }

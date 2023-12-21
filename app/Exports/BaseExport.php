@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -33,15 +33,6 @@ class BaseExport implements FromCollection, WithHeadings, WithStyles
         ];
     }
 
-    // Method to retrieve date columns
-    public function dates()
-    {
-        return [
-            'created_at', 
-            'updated_at'
-        ];
-    }
-
     public function headings(): array
     {
         return array_map(function ($column) {
@@ -59,23 +50,27 @@ class BaseExport implements FromCollection, WithHeadings, WithStyles
         ]);
     }
 
+    public function columnDates()
+    {
+        return [
+            'created_at',
+            'updated_at',
+        ];
+    }
 
-    // Filter the collection to retain specific keys and format dates
     public function filterCollection()
     {
-        $timezone = config('app.timezone');
-        $dateColumns = $this->dates();
-
-        // Modify the collection to keep only specific keys and format dates
-        $this->collection = $this->collection->map(function ($item) use ($timezone, $dateColumns) {
-            return collect($item)->map(function ($value, $key) use ($timezone, $dateColumns) {
-                // Check if the column is a date field
-                if (in_array($key, $dateColumns)) {
-                    return Carbon::parse($value)->setTimezone($timezone)->format(config('app.date_format'));
-                    // Set the format as 'm/d/Y h:i:s A' for 12-hour format with AM/PM
+        $this->collection = $this->collection->map(function ($item) {
+            return collect($item)->filter(function ($value, $key) {
+                return in_array($key, $this->columns());
+            })->map(function ($value, $key) {
+                if (in_array($key, $this->columnDates())) {
+                    // Convert to date format using Carbon and app timezone
+                    return Carbon::parse($value)->timezone(config('app.timezone'))->format(config('app.date_format'));
                 }
                 return $value;
-            })->only($this->columns())->toArray();
+            })->toArray();
         });
     }
+
 }

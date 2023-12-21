@@ -74,7 +74,7 @@ return [
 
 
     // custom
-    'date_format' => env('APP_DATE_FORMAT', 'm/d/Y h:i:s A'),
+    'date_format' => env('APP_DATE_FORMAT', 'Y-m-d h:i:s A'), //default is 12-hour format
 
     /*
     |--------------------------------------------------------------------------
