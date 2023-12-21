@@ -3,10 +3,12 @@
 namespace App\Exports;
 
 use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class BaseExport implements FromCollection, WithHeadings
+class BaseExport implements FromCollection, WithHeadings, WithStyles
 {
     protected $collection;
 
@@ -27,7 +29,7 @@ class BaseExport implements FromCollection, WithHeadings
     public function columns()
     {
         return [
-            ...$this->dates()
+            // columns
         ];
     }
 
@@ -46,6 +48,17 @@ class BaseExport implements FromCollection, WithHeadings
             return ucwords(str_replace('_', ' ', $column));
         }, $this->columns());
     }
+
+    public function styles(Worksheet $sheet)
+    {
+        // Apply bold styling to the first row (headings)
+        $sheet->getStyle('1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+            ],
+        ]);
+    }
+
 
     // Filter the collection to retain specific keys and format dates
     public function filterCollection()
