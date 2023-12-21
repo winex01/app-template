@@ -65,20 +65,4 @@ class BaseExport implements FromCollection, WithHeadings
             })->only($this->columns())->toArray();
         });
     }
-
-    public function getValueBinder(): CustomValueBinder
-    {
-        return new class extends ValueBinder implements WithCustomValueBinder {
-            public function bindValue(Cell $cell, $value)
-            {
-                // Check if the value is a date and apply custom formatting
-                if ($value instanceof Carbon) {
-                    $cell->setValueExplicit($value->format('m/d/Y h:i:s A'), DataType::TYPE_STRING);
-                    return true;
-                }
-                // For other values, use default binding
-                return parent::bindValue($cell, $value);
-            }
-        };
-    }
 }
