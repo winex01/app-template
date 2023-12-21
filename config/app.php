@@ -72,6 +72,10 @@ return [
 
     'timezone' => env('APP_TIMEZONE', 'Asia/Manila'),
 
+
+    // custom
+    'date_format' => env('APP_DATE_FORMAT', 'm/d/Y h:i:s A'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
