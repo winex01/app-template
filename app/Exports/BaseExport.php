@@ -27,7 +27,6 @@ class BaseExport implements FromCollection, WithHeadings
     public function columns()
     {
         return [
-            'name', 
             ...$this->dates()
         ];
     }
