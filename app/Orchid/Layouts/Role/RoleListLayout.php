@@ -23,6 +23,9 @@ class RoleListLayout extends Table
      */
     public function columns(): array
     {
+        // TODO:: table slug and use it to get localStorage
+        dd($this->getSlug());
+
         return [
             $this->columnBulkAction('roles'),
 
