@@ -12,6 +12,7 @@ trait ExportTrait
     public function exportButton($screen)
     {
         return DropDown::make('Export')
+                ->id('btn-export')
                 ->class('bulk-success btn btn-link')
                 ->icon('cloud-download')
                 ->list([

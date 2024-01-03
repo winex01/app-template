@@ -39,7 +39,7 @@ function updateButtonClass() {
         { buttons: bulkSuccessButtons, classToAdd: 'btn-success' },
         { buttons: bulkInfoButtons, classToAdd: 'btn-info' },
         { buttons: bulkWarningButtons, classToAdd: 'btn-warning' },
-        { buttons: bulkPrimaryButtons, classToAdd: 'btn-primary' },
+        { buttons: bulkPrimaryButtons, classToAdd: 'btn-primary' }, 
         { buttons: bulkDarkButtons, classToAdd: 'btn-dark' },
     ];
 
