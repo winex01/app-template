@@ -127,10 +127,10 @@ return [
 
     'resource' => [
         'stylesheets' => [
-            '/css/custom.css'
+            '/css/pagination.css'
         ],
         'scripts'     => [
-            '/js/custom.js'
+            '/js/bulk.js'
         ],
     ],
 
