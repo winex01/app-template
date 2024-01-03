@@ -130,7 +130,8 @@ return [
             '/css/pagination.css'
         ],
         'scripts'     => [
-            '/js/bulk.js'
+            '/js/bulk.js',
+            '/js/export.js'
         ],
     ],
 

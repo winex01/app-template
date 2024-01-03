@@ -19,6 +19,11 @@ class BaseExport implements FromCollection, WithHeadings, WithStyles
         $this->collection = $collection;
 
         $this->columnData();
+
+
+        // TODO:: table slug and use it to get localStorage
+        // TODO:: check or search laravel package for web localStorage and dont reinvent if package already exist
+        // dd($this->getSlug());
     }
 
     /**

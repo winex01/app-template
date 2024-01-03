@@ -32,6 +32,12 @@ use App\Orchid\Screens\Examples\ExampleFieldsAdvancedScreen;
 |
 */
 
+// TODO::
+// Trait Helper
+// Route::screen('/get-localstorage-table-slug', PlatformScreen::class)
+    // ->name('trait.slug');
+
+
 // Main
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');
