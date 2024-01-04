@@ -1,4 +1,16 @@
-// Function to handle checkbox retrieval and set cookie
+// Function to retrieve array of excluded column IDs from the cookie
+function getExcludedColumnIdsFromCookie() {
+  const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+  const excludeColumnsCookie = cookies.find(cookie => cookie.startsWith('excludeColumns='));
+
+  if (excludeColumnsCookie) {
+    const cookieValue = excludeColumnsCookie.split('=')[1];
+    return JSON.parse(cookieValue);
+  } else {
+    return [];
+  }
+}
+
 function handleExportButtonClick() {
   let uncheckedCheckboxes = document.querySelectorAll('.dropdown-column-menu input[type="checkbox"]:not(:checked)');
   
@@ -14,36 +26,31 @@ function handleExportButtonClick() {
   }
 }
 
-// Function to retrieve array of unchecked IDs from the cookie
-function getUncheckedIdsFromCookie() {
-  const cookies = document.cookie.split(';').map(cookie => cookie.trim());
-  const excludeColumnsCookie = cookies.find(cookie => cookie.startsWith('excludeColumns='));
-
-  if (excludeColumnsCookie) {
-    const cookieValue = excludeColumnsCookie.split('=')[1];
-    return JSON.parse(cookieValue);
-  } else {
-    return [];
+function attachExportButtonClickHandler() {
+  let exportButton = document.getElementById('btn-export');
+  if (exportButton) {
+    exportButton.removeEventListener('click', handleExportButtonClick);
+    exportButton.addEventListener('click', handleExportButtonClick);
   }
 }
 
-// Initial setup on page load
-document.addEventListener('turbo:load', function() {
-  // Attach click event to the button after Turbo navigation
-  let exportButton = document.getElementById('btn-export');
-  if (exportButton) {
-    exportButton.addEventListener('click', handleExportButtonClick);
-  }
+function updateExportButtonClickHandler() {
+  attachExportButtonClickHandler();
+  const excludedColumnIds = getExcludedColumnIdsFromCookie();
+  console.log('Excluded Column IDs from cookie:', excludedColumnIds);
+}
 
-  // Log the retrieved array of unchecked IDs
-  const uncheckedIds = getUncheckedIdsFromCookie();
-  console.log('Unchecked IDs from cookie:', uncheckedIds);
+document.addEventListener('turbo:load', function() {
+  updateExportButtonClickHandler();
 });
 
-// Execute the initial setup when the page is first loaded
 document.addEventListener('DOMContentLoaded', function() {
-  let exportButton = document.getElementById('btn-export');
-  if (exportButton) {
-    exportButton.addEventListener('click', handleExportButtonClick);
-  }
+  updateExportButtonClickHandler();
+});
+
+// Additional code to handle checkbox changes
+document.querySelectorAll('.dropdown-column-menu input[type="checkbox"]').forEach(function(checkbox) {
+  checkbox.addEventListener('change', function() {
+    updateExportButtonClickHandler();
+  });
 });

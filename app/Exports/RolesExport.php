@@ -10,8 +10,6 @@ class RolesExport extends BaseExport implements FromCollection
     public function excludeColumns()
     {
         return [
-            'id',
-            'deleted_at',
             'permissions',
         ];
     }

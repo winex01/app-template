@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -19,11 +20,6 @@ class BaseExport implements FromCollection, WithHeadings, WithStyles
         $this->collection = $collection;
 
         $this->columnData();
-
-
-        // TODO:: table slug and use it to get localStorage
-        // TODO:: check or search laravel package for web localStorage and dont reinvent if package already exist
-        // dd($this->getSlug());
     }
 
     /**
@@ -63,9 +59,35 @@ class BaseExport implements FromCollection, WithHeadings, WithStyles
 
     public function excludeColumns()
     {
+        return [];
+    }
+
+    // Screen dropdown: Configure Columns at button left on screen.
+    private function configureColumnsUnchecked()
+    {
+        $excludeColumns = [];
+
+        // i fetch it using vanilla PHP like this, because this cookie was created in client side, check: export.js
+        if(isset($_COOKIE['excludeColumns'])) {
+            $excludeColumns = collect(json_decode($_COOKIE['excludeColumns']));
+            
+            // Map through the collection and convert values to snake case
+            $excludeColumns = $excludeColumns->map(function ($item) {
+
+                return Str::snake(str_replace('-', '_', $item));
+            })->all();
+        }
+
+        return $excludeColumns;
+    }
+
+    private function defaultExcludeColumns()
+    {
         return [
             'id',
             'deleted_at',
+            ...$this->excludeColumns(),
+            ...$this->configureColumnsUnchecked()
         ];
     }
 
@@ -73,7 +95,7 @@ class BaseExport implements FromCollection, WithHeadings, WithStyles
     {
         return $this->collection->map(function ($item) {
             return collect($item)->filter(function ($value, $key) {
-                return array_key_exists($key, $this->columnData) && !in_array($key, $this->excludeColumns());
+                return array_key_exists($key, $this->columnData) && !in_array($key, $this->defaultExcludeColumns());
             })->map(function ($value, $key) {
                 if ($this->columnData[$key] === 'datetime') {
                     // Convert to date format using Carbon and app timezone
@@ -115,7 +137,7 @@ class BaseExport implements FromCollection, WithHeadings, WithStyles
                 })->toArray();
 
             // Remove excluded columns from columnData
-            $this->columnData = collect($columnData)->except($this->excludeColumns())->toArray();
+            $this->columnData = collect($columnData)->except($this->defaultExcludeColumns())->toArray();
         }
     }
 }
