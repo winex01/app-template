@@ -1,34 +1,49 @@
-// Get the data table slug
-function getDataTableSlug() {
-    const element = document.querySelector('[data-controller="table"]');
-    if (element) {
-      const dataTableSlug = element.getAttribute('data-table-slug');
-      return dataTableSlug;
-    } else {
-      return 'Element not found';
-    }
+// Function to handle checkbox retrieval and set cookie
+function handleExportButtonClick() {
+  let uncheckedCheckboxes = document.querySelectorAll('.dropdown-column-menu input[type="checkbox"]:not(:checked)');
+  
+  let uncheckedIds = [];
+  uncheckedCheckboxes.forEach(function(checkbox) {
+    uncheckedIds.push(checkbox.getAttribute('id'));
+  });
+
+  if (uncheckedIds.length > 0) {
+    const cookieValue = JSON.stringify(uncheckedIds);
+    document.cookie = `excludeColumns=${cookieValue}; path=/`;
+    console.log('Stored in excludeColumns cookie:', uncheckedIds);
   }
-  
-  // Function to retrieve local storage value
-  function getLocalStorageValue() {
-    let dataTableSlug = getDataTableSlug();
-    return dataTableSlug;
+}
+
+// Function to retrieve array of unchecked IDs from the cookie
+function getUncheckedIdsFromCookie() {
+  const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+  const excludeColumnsCookie = cookies.find(cookie => cookie.startsWith('excludeColumns='));
+
+  if (excludeColumnsCookie) {
+    const cookieValue = excludeColumnsCookie.split('=')[1];
+    return JSON.parse(cookieValue);
+  } else {
+    return [];
   }
-  
-  // Function to configure columns
-  function configureColumns() {
-    let dataTableSlugValue = getLocalStorageValue();
-    let dataFromLocalStorage = localStorage.getItem(dataTableSlugValue);
-  
-    if (dataFromLocalStorage) {
-      console.log('Data retrieved from local storage:', dataFromLocalStorage);
-      // Do something with the retrieved data
-      return dataFromLocalStorage;
-    } else {
-      console.log('No data found in local storage for the given key.');
-      return null;
-    }
+}
+
+// Initial setup on page load
+document.addEventListener('turbo:load', function() {
+  // Attach click event to the button after Turbo navigation
+  let exportButton = document.getElementById('btn-export');
+  if (exportButton) {
+    exportButton.addEventListener('click', handleExportButtonClick);
   }
 
-//   TODO:: wip
-  
+  // Log the retrieved array of unchecked IDs
+  const uncheckedIds = getUncheckedIdsFromCookie();
+  console.log('Unchecked IDs from cookie:', uncheckedIds);
+});
+
+// Execute the initial setup when the page is first loaded
+document.addEventListener('DOMContentLoaded', function() {
+  let exportButton = document.getElementById('btn-export');
+  if (exportButton) {
+    exportButton.addEventListener('click', handleExportButtonClick);
+  }
+});
