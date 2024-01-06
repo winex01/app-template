@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -106,38 +107,41 @@ class BaseExport implements FromCollection, WithHeadings, WithStyles
         });
     }
 
-    // TODO:: fix if checkbox is use no paginator instance only models
-    // TODO:: check also if no records is showing because of applied filters
     public function columnData()
     {
-        // dd($this->collection);
+        $items = null;
+        $tableName = null;        
 
-        $items = $this->collection->items();
+        if ($this->collection instanceof Collection) {
+            $items = $this->collection;
+            $tableName = $this->collection->first()->getTable();
 
-        // Check if items exist and if the first item is an Eloquent model
-        if (!empty($items) && $items[0] instanceof \Illuminate\Database\Eloquent\Model) {
-            $firstItem = $items[0];
-            $tableName = $firstItem->getTable();
+        } else {
+            $items = $this->collection->items();
 
-            // Get the columns of the table with data types
-            $columnData = collect(Schema::getColumnListing($tableName))
-                ->mapWithKeys(function ($column) use ($tableName) {
-                    $columnType = Schema::getColumnType($tableName, $column);
-
-                    // Map Laravel column types to PHP types
-                    $dataType = match ($columnType) {
-                        'bigint' => 'integer',
-                        'boolean' => 'boolean',
-                        'date', 'datetime', 'timestamp' => 'datetime',
-                        'decimal', 'double', 'float' => 'float',
-                        default => 'string',
-                    };
-
-                    return [$column => $dataType];
-                })->toArray();
-
-            // Remove excluded columns from columnData
-            $this->columnData = collect($columnData)->except($this->defaultExcludeColumns())->toArray();
+            if (!empty($items)) {
+                $tableName = collect($items)->first()->getTable();
+            }
         }
+        
+        // Get the columns of the table with data types
+        $columnData = collect(Schema::getColumnListing($tableName))
+            ->mapWithKeys(function ($column) use ($tableName) {
+                $columnType = Schema::getColumnType($tableName, $column);
+
+                // Map Laravel column types to PHP types
+                $dataType = match ($columnType) {
+                    'bigint' => 'integer',
+                    'boolean' => 'boolean',
+                    'date', 'datetime', 'timestamp' => 'datetime',
+                    'decimal', 'double', 'float' => 'float',
+                    default => 'string',
+                };
+
+                return [$column => $dataType];
+            })->toArray();
+
+        // Remove excluded columns from columnData
+        $this->columnData = collect($columnData)->except($this->defaultExcludeColumns())->toArray();
     }
 }
